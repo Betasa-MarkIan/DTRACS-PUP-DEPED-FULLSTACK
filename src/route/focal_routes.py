@@ -49,8 +49,7 @@ async def login_focal_account(
 ) -> db_response.FocalResponse:
     
     account = await focal_services.verify_login(db, login_data)
-    response = db_response.Focal
-    Response.model_validate(account)
+    response = db_response.FocalResponse.model_validate(account)
 
     return response
 
