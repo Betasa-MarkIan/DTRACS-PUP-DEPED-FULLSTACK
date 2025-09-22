@@ -32,7 +32,7 @@ async def get_school_verified_info(user_id: str, db: AsyncSession = Depends(get_
     return response
 
 
-@router.post("/account/login")
+@router.post("/account/login", status_code=status.HTTP_200_OK)
 async def login_school_account(
     login_data: school_schemas.SchoolAccountLoginSchema,
     db: AsyncSession = Depends(get_db)
@@ -44,7 +44,7 @@ async def login_school_account(
     return response
 
 
-@router.put("/account/update/id/") 
+@router.put("/account/update/id/", status_code=status.HTTP_200_OK) 
 async def update_school_account(
     user_id: str,
     updated_data: school_schemas.SchoolAccountUpdateSchema,

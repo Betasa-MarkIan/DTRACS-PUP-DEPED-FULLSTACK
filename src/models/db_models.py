@@ -94,6 +94,17 @@ class SchoolAccountsVerified(Base):
     assignments = relationship("TaskAssignment", back_populates="account", cascade="all, delete-orphan")
 
 
+class UserTokens(Base):
+    __tablename__ = "user_tokens"
+
+    ip_address = Column(String(60), nullable=False)
+    user_id = Column(CHAR(36), nullable=False)
+    token = Column(String(600), unique=True, index=True, nullable=False)
+    expires_at = Column(DateTime, nullable=False)
+    created_at = Column(DateTime, default=datetime.now())
+    session_id = Column(String(64), primary_key=True, default=None)
+
+
 class Tasks(Base):
     __tablename__ = "tasks"
 

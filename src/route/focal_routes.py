@@ -23,7 +23,6 @@ async def create_focal_account_request(
     return response
 
 
-# redundant check later
 @router.get("/account/info/id/", status_code=status.HTTP_200_OK)
 async def get_focal_verified_info(user_id: str, db: AsyncSession = Depends(get_db)) -> db_response.FocalResponse:
 

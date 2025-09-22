@@ -1,6 +1,7 @@
 from datetime import datetime
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from sqlalchemy import union_all
 from schema import school_schemas, db_response
 from repository import school_repositories, focal_repositories
 from models import db_models
@@ -34,12 +35,22 @@ async def create_school_account_request(db: AsyncSession, school_request: school
     if account_data is None:
         raise exc.get("AccountRegistrationFailed")
     
-    result = await db.execute(
-        select(db_models.SchoolAccountsVerified)
-        .where(db_models.SchoolAccountsVerified.email == account_data["email"])
-    )
-    account = result.scalar_one_or_none()
-    if account:
+    email_check = union_all(
+        select(db_models.SchoolAccountsRequest.email).where(db_models.SchoolAccountsRequest.email == account_data["email"]),
+
+        select(db_models.FocalAccountsRequest.email).where(db_models.FocalAccountsRequest.email == account_data["email"]),
+
+        select(db_models.SchoolAccountsVerified.email).where(db_models.SchoolAccountsVerified.email == account_data["email"]),
+
+        select(db_models.FocalAccountsVerified.email).where(db_models.FocalAccountsVerified.email == account_data["email"]),
+
+        select(db_models.AdminAccount.email).where(db_models.AdminAccount.email == account_data["email"])
+        
+    ).alias("email_check")
+
+    result = await db.execute(select(email_check))
+    email_exist = result.scalar_one_or_none()
+    if email_exist:
         raise exc.get("AccountDuplication")
     
     return await school_repositories.create_school_request(db, account_data)

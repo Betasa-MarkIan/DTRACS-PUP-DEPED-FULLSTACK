@@ -7,11 +7,14 @@ from fastapi.responses import JSONResponse
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 from contextlib import asynccontextmanager
+import ipaddress
+import os
 
 sys.path.append("src")
 
 from exceptions import ExceptionDict
-from route import school_routes, focal_routes, admin_routes  
+from route import school_routes, focal_routes, admin_routes
+from auth import auth_route, auth_security
 from database import engine, Base, get_db
 
 @asynccontextmanager
@@ -49,20 +52,45 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
+def get_real_client_ip(request: Request) -> str:
+    """
+    Extract the real client IP address for Railway deployment
+    Railway uses X-Forwarded-For header with the client IP as first value
+    """
+
+    ip_headers = [
+        "X-Forwarded-For",           # Railway's primary header
+        "X-Real-IP",                 # Alternative header
+        "CF-Connecting-IP",          # If using Cloudflare in front of Railway
+        "True-Client-IP"
+    ]
+
+    for header in ip_headers:
+        ip = request.headers.get(header)
+        if ip:
+            if "," in ip:
+                ip = ip.split(",")[0].strip()
+            try:
+                ipaddress.ip_address(ip)
+                return ip
+            except ValueError:
+                continue
+
+    # Fall back for when the ip is not found in the request headers
+    return request.client.host if request.client else "unknown"
+
+
 @app.middleware("http")
 async def extract_real_ip(request: Request, call_next):
-    real_ip = (
-        request.headers.get("CF-Connecting-IP")
-        or request.headers.get("X-Forwarded-For")
-        or request.headers.get("True-Client-IP")
-        or (request.client.host if request.client else None)
-    )
+    real_ip = get_real_client_ip(request)
+   
+    request.state.real_ip = real_ip
 
     old_client = request.scope.get("client") or (None, None)
     port = old_client[1]
     if real_ip:
         request.scope["client"] = (real_ip, port)
-    request.scope["real_ip"] = real_ip
+
     response = await call_next(request)
 
     return response
@@ -86,6 +114,42 @@ async def configure_logging():
             RealIPAccessFormatter('%(client_addr)s - "%(request_line)s" %(status_code)s')
         )
 
+async def startup_event():
+    auth_security.scheduler.start()
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    auth_security.scheduler.shutdown()
+
+
+# Add a simple endpoint to check what IP your server sees
+@app.get("/whats-my-ip")
+async def whats_my_ip(request: Request):
+    """Endpoint to check what IP address the server sees"""
+    client_host = request.client.host if request.client else None
+    real_ip = getattr(request.state, "real_ip", None)
+    
+    # Get all headers that might contain IP information
+    headers_info = {}
+    ip_headers = [
+        "X-Forwarded-For", 
+        "X-Real-IP", 
+        "CF-Connecting-IP", 
+        "True-Client-IP",
+        "X-Original-Forwarded-For",
+    ]
+    
+    for header in ip_headers:
+        headers_info[header] = request.headers.get(header)
+    
+    return {
+        "client_host": client_host,
+        "real_ip_from_middleware": real_ip,
+        "ip_headers": headers_info,
+        "environment": os.getenv("RAILWAY_ENVIRONMENT", "development")
+    }
+
 
 @app.get("/health")
 async def health_check(db: AsyncSession = Depends(get_db)):
@@ -103,6 +167,7 @@ async def health_check(db: AsyncSession = Depends(get_db)):
             detail=f"Database connection failed: {str(e)}"
         )
 
+app.include_router(auth_route.router)
 app.include_router(school_routes.router)
 app.include_router(focal_routes.router)
 app.include_router(admin_routes.router)

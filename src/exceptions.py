@@ -29,41 +29,46 @@ class ExceptionDict:
         }
 
         self.exceptions_details = {
-            # Add more errors here
+            "InvalidCredentials": lambda: ExceptionRaised(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid password"
+            ),
             "AccountNotFound": lambda: ExceptionRaised(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Account/s not found"
             ),
-            "AccountRegistrationFailed": lambda: ExceptionRaised(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Account registration failed"
-            ),
-            "InvalidCredentials": lambda: ExceptionRaised(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Invalid password"
-            ),
-            "UpdateFailed": lambda: ExceptionRaised(
-                detail="Failed to update account"
-            ),
             "NoTaskFound": lambda: ExceptionRaised(
+                status_code=status.HTTP_404_NOT_FOUND,
                 detail="No task found"
             ),
-            "RetrievingTasksFailed": lambda: ExceptionRaised(
-                detail="Retrieving tasks from database failed"
+            "AccountDuplication": lambda error=None: ExceptionRaised(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="Email already exist in another account",
+                error=error
+            ),
+            "AccountRegistrationFailed": lambda: ExceptionRaised(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Account registration failed"
+            ),
+            "UpdateFailed": lambda: ExceptionRaised(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Failed to update account"
             ),
             "DatabaseError": lambda error=None: ExceptionRaised(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Database error",
                 error=error
             ),
-            "AccountDuplication": lambda error=None: ExceptionRaised(
-                detail="Email already used in another account",
-                error=error
+            "RetrievingTasksFailed": lambda: ExceptionRaised(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Retrieving tasks from database failed"
             ),
             "TaskCreationFailed": lambda error=None: ExceptionRaised(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Creating a new task failed",
                 error=error
             )
-        }
+        } 
     
     def get(self, name: str):
         return self.exceptions_details[name]()

@@ -6,7 +6,7 @@ from util import account_util
 from models import db_models
 from repository import focal_repositories
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import delete
+from sqlalchemy import delete, union_all
 from sqlalchemy.future import select
 
 exc = ExceptionDict()
@@ -36,13 +36,23 @@ async def create_focal_account_request(
     if account_data is None:
         raise exc.get("AccountRegistrationFailed")
     
-    result = await db.execute(
-        select(db_models.FocalAccountsVerified)
-        .where(db_models.FocalAccountsVerified.email == account_data["email"])
-    )
-    account = result.scalar_one_or_none()
+    email_check = union_all(
+        select(db_models.SchoolAccountsRequest.email).where(db_models.SchoolAccountsRequest.email == account_data["email"]),
 
-    if account:
+        select(db_models.FocalAccountsRequest.email).where(db_models.FocalAccountsRequest.email == account_data["email"]),
+
+        select(db_models.SchoolAccountsVerified.email).where(db_models.SchoolAccountsVerified.email == account_data["email"]),
+
+        select(db_models.FocalAccountsVerified.email).where(db_models.FocalAccountsVerified.email == account_data["email"]),
+
+        select(db_models.AdminAccount.email).where(db_models.AdminAccount.email == account_data["email"])
+        
+    ).alias("email_check")
+
+    result = await db.execute(select(email_check))
+    account_exist = result.scalar_one_or_none()
+
+    if account_exist:
         raise exc.get("AccountDuplication")
     
     return await focal_repositories.create_focal_account(db, account_data)
