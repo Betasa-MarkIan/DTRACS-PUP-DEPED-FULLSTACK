@@ -82,7 +82,7 @@ async def admin_password_check(db: AsyncSession, admin_credentials: admin_schema
         raise exc.get("AccountNotFound")
 
     if not pwd_context.verify(admin_credentials.password, account.password):
-        raise ExceptionRaised(detail="Admin password incorrect. Please try again")
+        raise exc.get("InvalidCredentials")
     
     return None
 

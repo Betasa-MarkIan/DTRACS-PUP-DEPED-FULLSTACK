@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from exceptions import ExceptionRaised, ExceptionDict
 from models import db_models
 from schema import admin_schemas
+from sqlalchemy import delete
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from typing import Any
@@ -44,6 +45,12 @@ async def push_delete(db: AsyncSession, obj: Any):
         raise exc.get("DatabaseError", error=e)
     
     return obj
+
+async def push_delete_tokens(db: AsyncSession, user_id: str):
+    await db.execute(delete(db_models.UserTokens).where(db_models.UserTokens.user_id == user_id))
+    await db.commit()
+    
+    return None
 
 
 async def verify_login(db: AsyncSession, login: admin_schemas.AdminLoginSchema):

@@ -5,17 +5,37 @@ from exceptions import ExceptionDict
 from database import get_db
 from repository import focal_repositories
 from models import db_models
+from schema import db_response
 from config import settings
 from datetime import datetime, timedelta
 from auth import auth_security, token_schema
 from auth.auth_dependencies import get_current_user
 from typing import Any
 import secrets
+import logging
+
 
 router = APIRouter(prefix="/auth", tags=["authentication"])
 exc = ExceptionDict()
+logger = logging.getLogger(__name__)
 
 # TODO: Add admin to auth
+# TODO: Login Rate limiter Redis
+
+@router.get("/get/current/user", status_code=status.HTTP_200_OK)
+async def get_user(
+    current_user: Any = Depends(get_current_user),
+):
+    
+    if "SCHOOL" in current_user.user_id:
+        json_response = db_response.SchoolResponse.model_validate(current_user)
+    elif "FOCAL" in current_user.user_id:
+        json_response = db_response.FocalResponse.model_validate(current_user)
+    else:
+        json_response = db_response.AdminResponse.model_validate(current_user)
+    
+    return json_response
+    
 
 @router.post("/refresh", status_code=status.HTTP_200_OK)
 async def refresh_access_token(
@@ -31,10 +51,9 @@ async def refresh_access_token(
     payload = auth_security.verify_refresh_token(refresh_token)
     if not payload:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Refresh token missing")
-    
+
     user_id = payload.get("sub")
     session_id = payload.get("session_id")
-    
     result = await db.execute(
             select(db_models.UserTokens)
             .where(db_models.UserTokens.user_id == user_id)
@@ -54,94 +73,11 @@ async def refresh_access_token(
         )
 
     new_tokens = await create_tokens(db, request, response, user_id)
-
-    await db.delete(stored_token)
-    await db.commit()
-    
     if auth_security.verify_password(refresh_token, stored_token.token):
         await db.delete(stored_token)
-
-
+        await db.commit()
+    
     return new_tokens
-
-
-
-
-
-
-
-# @router.post("/school/login", status_code=status.HTTP_200_OK)
-# async def login (
-#     request: Request,
-#     response: Response,
-#     login_data: school_schemas.SchoolAccountLoginSchema,
-#     db: AsyncSession = Depends(get_db)
-# ) -> token_schema.TokenData:
-
-#     """
-#     school information will no longer come from the logins
-#     """ 
-
-#     result = await db.execute(
-#         select(db_models.SchoolAccountsVerified)
-#         .where(db_models.SchoolAccountsVerified.email == login_data.email)
-#     )
-
-#     school_account = result.scalar_one_or_none()
-
-#     if school_account is None or not security.verify_password(login_data.password, school_account.password):
-#         raise HTTPException(
-#             status_code=status.HTTP_401_UNAUTHORIZED,
-#             detail="Incorrect email or password",
-#             headers={"WWW-Authenticate": "Bearer"},
-#         )
-
-#     access_token = security.create_access_token(data={"sub": school_account.user_id})
-#     session_id = secrets.token_urlsafe(48)
-#     refresh_token = security.create_refresh_token(data={
-#         "sub": school_account.user_id,
-#         "session_id": session_id
-#     })
-
-#     hashed_refresh_token = security.hash_password(refresh_token)
-#     expire = datetime.now() + timedelta(seconds=settings.REFRESH_TOKEN_EXPIRE)
-
-#     db_refresh_token = db_models.SchoolTokens(
-#         ip_address=request.state.real_ip,
-#         school_id=school_account.user_id,
-#         token=hashed_refresh_token,
-#         expires_at=expire,
-#         session_id=session_id
-#     )
-
-#     await focal_repositories.push_specific(db, db_refresh_token)
-
-#     response.set_cookie(
-#         key="access_token",
-#         value=access_token,
-#         httponly=True,
-#         expires=settings.ACCESS_TOKEN_EXPIRE,
-#         secure=not settings.DEBUG,  # True in production (HTTPS only)
-#         samesite="lax",
-#         path="/"
-#     )
-#     response.set_cookie(
-#         key="refresh_token",
-#         value=refresh_token,
-#         httponly=True,
-#         expires=settings.REFRESH_TOKEN_EXPIRE,
-#         secure=not settings.DEBUG,
-#         samesite="lax",
-#         path="/auth/refresh"  # Only sent to the refresh endpoint!
-#     )
-
-#     token_response = token_schema.TokenData(
-#         access_token=access_token,
-#         token_type="Bearer",
-#         user_id=school_account.user_id
-#     )
-
-#     return token_response
 
 
 @router.post("/login", status_code=status.HTTP_200_OK)
@@ -150,11 +86,13 @@ async def login (
     response: Response,
     login_data: token_schema.Login,
     db: AsyncSession = Depends(get_db)
-) -> token_schema.TokenData:
+) -> dict:
+# ) -> token_schema.TokenData:
 
     """
     user information will no longer come from the logins
     """ 
+    logger.info("Login called")
     result = await db.execute(
         select(db_models.SchoolAccountsVerified)
         .where(db_models.SchoolAccountsVerified.email == login_data.email)
@@ -187,6 +125,43 @@ async def login (
     return generate_tokens
 
 
+# @router.post("/logout", status_code=status.HTTP_200_OK)
+# async def logout(
+#     request: Request,
+#     response: Response,
+#     current_user: Any = Depends(get_current_user),
+#     db: AsyncSession = Depends(get_db)
+# ):
+#     refresh_token = request.cookies.get("refresh_token")
+#     if refresh_token:
+#         logger.info("Refresh token validattion success")
+#         decoded_refresh_token = auth_security.verify_refresh_token(refresh_token)
+#         result = await db.execute(
+#             select(db_models.UserTokens)
+#             .where(db_models.UserTokens.user_id == current_user.user_id)
+#             .where(db_models.UserTokens.session_id == decoded_refresh_token["session_id"])
+#         )
+
+#         user = result.scalar_one_or_none()
+#         if user is None:
+#             logger.info("User is none")
+#             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Refresh token revoked")
+        
+#         if auth_security.verify_password(refresh_token, user.token):
+#             logger.info("Browser token has been matched with database")
+#             await db.delete(user)
+#             await db.commit()
+        
+#         else:
+#             logger.info("Validation failed")
+
+#     response.delete_cookie("access_token", path="/")
+#     response.delete_cookie("refresh_token", path="/auth/refresh")
+#     logger.info("Refresh token validattion failed")
+
+#     return {"message": "Successfully logged out"}
+
+
 @router.post("/logout", status_code=status.HTTP_200_OK)
 async def logout(
     request: Request,
@@ -194,9 +169,12 @@ async def logout(
     current_user: Any = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
+
+# TODO: i need both the access token and the refresh token
+
     refresh_token = request.cookies.get("refresh_token")
     if refresh_token:
-
+        logger.info("Refresh token validattion success")
         decoded_refresh_token = auth_security.verify_refresh_token(refresh_token)
         result = await db.execute(
             select(db_models.UserTokens)
@@ -204,19 +182,25 @@ async def logout(
             .where(db_models.UserTokens.session_id == decoded_refresh_token["session_id"])
         )
 
-        user = result.scalar_one_or_none
+        user = result.scalar_one_or_none()
         if user is None:
+            logger.info("User is none")
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Refresh token revoked")
         
         if auth_security.verify_password(refresh_token, user.token):
+            logger.info("Browser token has been matched with database")
             await db.delete(user)
+            await db.commit()
         
-        await db.commit()
+        else:
+            logger.info("Validation failed")
 
     response.delete_cookie("access_token", path="/")
     response.delete_cookie("refresh_token", path="/auth/refresh")
+    logger.info("Refresh token validattion failed")
 
     return {"message": "Successfully logged out"}
+
 
 async def create_tokens(
     db: AsyncSession, 
@@ -263,14 +247,24 @@ async def create_tokens(
         path="/auth/refresh"  # Only sent to the refresh endpoint!
     )
 
-    token_response = token_schema.TokenData(
-        access_token=access_token,
-        token_type="Bearer",
-        user_id=user_id
-    )
+    # token_response = token_schema.TokenData(
+    #     access_token=access_token,
+    #     token_type="Bearer",
+    #     user_id=user_id
+    # )
+
+    token_response = {
+        "access_token":access_token,
+        "refresh_token":refresh_token,
+        "token_type":"Bearer",
+        "user_id":user_id
+    }
 
     return token_response
 
 """
 Add condition, when user is deleted, token should be deleted as well
+1. School_verified
+2. Focal verified
+3. Admin - automatic check
 """

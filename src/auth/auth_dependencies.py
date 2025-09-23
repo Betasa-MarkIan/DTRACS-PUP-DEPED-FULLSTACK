@@ -6,11 +6,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from auth import auth_security
 
-auth_security = HTTPBearer()
+security = HTTPBearer()
 
 async def get_current_user(
     #request: Request,
-    credentials: HTTPAuthorizationCredentials = Depends(auth_security),
+    credentials: HTTPAuthorizationCredentials = Depends(security),
     db: AsyncSession = Depends(get_db)
 ):
     # access_token = request.cookies.get("access_token")
@@ -20,8 +20,8 @@ async def get_current_user(
     #         detail="Could not validate credentials",
     #         headers={"WWW-Authenticate": "Bearer"},
     #     )
-
-    payload = await auth_security.verify_access_token(credentials)
+    token = credentials.credentials
+    payload = auth_security.verify_access_token(token)
     if not payload:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -58,4 +58,7 @@ async def get_current_user(
         )
     
     return user
+
+
+# DELETE FROM dtracs_database.user_tokens WHERE user_id = 'FOCAL-0003' AND expires_at < NOW();
 

@@ -1,15 +1,25 @@
-import sys
 from fastapi import FastAPI, HTTPException, status, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
-import logging
 from uvicorn.logging import AccessFormatter
 from fastapi.responses import JSONResponse
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 from contextlib import asynccontextmanager
+import logging
+import sys
 import ipaddress
 import os
 
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s: [%(filename)s:%(lineno)d] - %(message)s',
+    handlers=[
+        logging.FileHandler("app.log"),  # Log to file
+        logging.StreamHandler(sys.stdout)  # Log to console
+    ]
+)
+
+logger = logging.getLogger(__name__)
 sys.path.append("src")
 
 from exceptions import ExceptionDict

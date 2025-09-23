@@ -98,7 +98,7 @@ class UserTokens(Base):
     __tablename__ = "user_tokens"
 
     ip_address = Column(String(60), nullable=False)
-    user_id = Column(CHAR(36), nullable=False)
+    user_id = Column(CHAR(36), nullable=False, index=True)
     token = Column(String(600), unique=True, index=True, nullable=False)
     expires_at = Column(DateTime, nullable=False)
     created_at = Column(DateTime, default=datetime.now())

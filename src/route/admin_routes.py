@@ -141,6 +141,7 @@ async def delete_school_verified_account(
     account = await account_util.get_school_verified_by_id(db, user_id)
     await admin_services.admin_password_check(db, admin_credentials)
     deleted_account = await admin_repositories.push_delete(db, account)
+    await admin_repositories.push_delete_tokens(db, user_id)
     response = db_response.SchoolResponse.model_validate(deleted_account)
     
     return response
@@ -156,6 +157,7 @@ async def delete_focal_verified_account(
     account = await account_util.get_focal_verified_by_id(db, user_id)
     await admin_services.admin_password_check(db, admin_credentials)
     deleted_account = await admin_repositories.push_delete(db, account)
+    await admin_repositories.push_delete_tokens(db, user_id)
     response = db_response.FocalResponse.model_validate(deleted_account)
     
     return response
