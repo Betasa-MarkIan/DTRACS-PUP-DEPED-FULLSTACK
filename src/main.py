@@ -10,17 +10,20 @@ import sys
 import ipaddress
 import os
 
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s: [%(filename)s:%(lineno)d] - %(message)s',
     handlers=[
-        logging.FileHandler("app.log"),  # Log to file
-        logging.StreamHandler(sys.stdout)  # Log to console
+        logging.FileHandler("app.log"),
+        logging.StreamHandler(sys.stdout) 
     ]
 )
 
+
 logger = logging.getLogger(__name__)
 sys.path.append("src")
+
 
 from exceptions import ExceptionDict
 from route import school_routes, focal_routes, admin_routes
@@ -28,22 +31,49 @@ from auth import auth_route, auth_security
 from database.database import engine, Base, get_db
 from database.redis import get_redis_client
 
+
+class RealIPAccessFormatter(AccessFormatter):
+    def formatMessage(self, record):
+        if isinstance(record.args, dict):
+            real_ip = record.args.get("real_ip")
+            if real_ip:
+                record.args["client_addr"] = real_ip
+
+        return super().formatMessage(record)
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    """Database initialization"""
     async with engine.begin() as conn:
         #await conn.run_sync(Base.metadata.drop_all)  # Uncomment to reset database
         await conn.run_sync(Base.metadata.create_all)
     print("✅ Database tables created successfully")
     
+
+    """Redis initialization"""
     global redis_client
     redis_client = await get_redis_client()
     print("✅ Redis client initialized successfully")
+
+
+    """Logger configuration"""
+    access_logger = logging.getLogger("uvicorn.access")
+    for handler in access_logger.handlers:
+        handler.setFormatter(
+            RealIPAccessFormatter('%(client_addr)s - "%(request_line)s" %(status_code)s')
+        )
+
+    """Scheduler initializaiton"""
+    auth_security.scheduler.start()
 
     yield
 
     await engine.dispose()
     await redis_client.close()
+    auth_security.scheduler.shutdown()
     print("Database connection closed")
+
 
 exc = ExceptionDict()
 app = FastAPI(
@@ -112,32 +142,6 @@ async def extract_real_ip(request: Request, call_next):
     return response
 
 
-class RealIPAccessFormatter(AccessFormatter):
-    def formatMessage(self, record):
-        if isinstance(record.args, dict):
-            real_ip = record.args.get("real_ip")
-            if real_ip:
-                record.args["client_addr"] = real_ip
-
-        return super().formatMessage(record)
-
-
-@app.on_event("startup")
-async def configure_logging():
-    access_logger = logging.getLogger("uvicorn.access")
-    for handler in access_logger.handlers:
-        handler.setFormatter(
-            RealIPAccessFormatter('%(client_addr)s - "%(request_line)s" %(status_code)s')
-        )
-
-async def startup_event():
-    auth_security.scheduler.start()
-
-@app.on_event("shutdown")
-async def shutdown_event():
-    auth_security.scheduler.shutdown()
-
-
 # Add a simple endpoint to check what IP your server sees
 @app.get("/whats-my-ip")
 async def whats_my_ip(request: Request):
@@ -202,16 +206,19 @@ async def exc_handler(req, exc):
         content = {"message": getattr(exc, 'detail', str(exc))}
     )  
 
-
-app.add_exception_handler(exc.get_class("AccountNotFound"), exc_handler)
-app.add_exception_handler(exc.get_class("AccountRegistrationFailed"), exc_handler)
-app.add_exception_handler(exc.get_class("InvalidCredentials"), exc_handler)
-app.add_exception_handler(exc.get_class("UpdateFailed"), exc_handler)
-app.add_exception_handler(exc.get_class("NoTaskFound"), exc_handler)
-app.add_exception_handler(exc.get_class("RetrievingTasksFailed"), exc_handler)
-app.add_exception_handler(exc.get_class("DatabaseError"), exc_handler)
-app.add_exception_handler(exc.get_class("AccountDuplication"), exc_handler)
-app.add_exception_handler(exc.get_class("TaskCreationFailed"), exc_handler)
+for exc_name in [
+    "AccountNotFound",
+    "AccountRegistrationFailed",
+    "InvalidCredentials",
+    "UpdateFailed",
+    "NoTaskFound",
+    "RetrievingTasksFailed",
+    "DatabaseError",
+    "AccountDuplication",
+    "TaskCreationFailed",
+]:
+    app.add_exception_handler(exc.get_class(exc_name), exc_handler)
+    
 app.add_exception_handler(HTTPException, exc_handler)
 app.add_exception_handler(Exception, exc_handler)
 

@@ -121,7 +121,7 @@ async def login (
     
     client_ip = request.state.real_ip
     key = f"rate_limit:login:{client_ip}"
-    await redis_dependencies.rate_limiter.redis.delete(key)
+    await (await redis_dependencies.get_redis_client()).delete(key)
 
     generate_tokens = await create_tokens(db, request, response, account.user_id)
 

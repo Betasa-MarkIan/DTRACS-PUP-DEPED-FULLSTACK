@@ -2,7 +2,9 @@ from fastapi import APIRouter, status, Depends
 from repository import focal_repositories
 from schema import focal_schemas, db_response
 from service import focal_services
+from models import db_models
 from util import helpers
+from auth.auth_dependencies import get_current_user
 from exceptions import ExceptionDict
 from sqlalchemy.ext.asyncio import AsyncSession
 from database.database import get_db
@@ -24,7 +26,11 @@ async def create_focal_account_request(
 
 
 @router.get("/account/info/id/", status_code=status.HTTP_200_OK)
-async def get_focal_verified_info(user_id: str, db: AsyncSession = Depends(get_db)) -> db_response.FocalResponse:
+async def get_focal_verified_info(
+    user_id: str,
+    db: AsyncSession = Depends(get_db),
+    user: db_models.FocalAccountsVerified = Depends(get_current_user)
+) -> db_response.FocalResponse:
 
     account_info = await helpers.get_focal_verified_by_id(db, user_id)
     response = db_response.FocalResponse.model_validate(account_info)
