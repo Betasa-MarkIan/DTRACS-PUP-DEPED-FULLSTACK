@@ -25,19 +25,6 @@ async def create_school_account_request(
     return response
 
 
-@router.get("/account/info/id/", status_code=status.HTTP_200_OK)
-async def get_school_verified_info(
-    user_id: str, 
-    db: AsyncSession = Depends(get_db),
-    user: db_models.SchoolAccountsVerified = Depends(get_current_user)
-) -> db_response.SchoolResponse:
-
-    account_info = await helpers.get_school_verified_by_id(db, user_id)
-    response = db_response.SchoolResponse.model_validate(account_info)
-
-    return response
-
-
 @router.put("/account/update/id/", status_code=status.HTTP_200_OK) 
 async def update_school_account(
     user_id: str,

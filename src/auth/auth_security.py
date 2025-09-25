@@ -9,8 +9,10 @@ from sqlalchemy.future import select
 from database.database import AsyncSessionLocal
 from models import db_models
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-import asyncio
+from apscheduler.triggers.interval import IntervalTrigger
+import logging
 
+logger = logging.getLogger(__name__)
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def verify_password(plain_password: str, hash_password: str):
@@ -96,13 +98,12 @@ async def cleanup_expired_tokens():
         )
 
         await db.commit()
-        print(f"24 hour routine token clean up complete. Cleaned up {result.rowcount} expired tokens")
+        logger.info(f"24 hour routine token clean up complete. Cleaned up {result.rowcount} expired tokens")
 
 
 scheduler = AsyncIOScheduler()
 scheduler.add_job(
-    lambda: asyncio.create_task(cleanup_expired_tokens()),
-    'interval',
-    hours=24
+    cleanup_expired_tokens,
+    trigger=IntervalTrigger(minutes=10)
 )
 

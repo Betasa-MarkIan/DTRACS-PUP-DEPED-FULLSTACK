@@ -334,3 +334,641 @@
 2025-09-25 21:12:25,439 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
 2025-09-25 21:12:25,710 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "<lambda>" to job store "default"
 2025-09-25 21:12:25,711 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-26 00:08:22,810 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:08:24,226 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:08:24,627 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "<lambda>" to job store "default"
+2025-09-26 00:08:24,628 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-26 00:13:23,377 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-26 00:13:25,704 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:13:26,127 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "<lambda>" to job store "default"
+2025-09-26 00:13:26,128 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-26 00:13:26,462 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-26 00:13:28,044 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:13:28,369 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "<lambda>" to job store "default"
+2025-09-26 00:13:28,369 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-26 00:14:28,052 - apscheduler.executors.default - INFO: [base.py:129] - Running job "<lambda> (trigger: interval[0:01:00], next run at: 2025-09-26 00:15:28 +08)" (scheduled at 2025-09-26 00:14:28.043945+08:00)
+2025-09-26 00:14:28,082 - apscheduler.executors.default - ERROR: [base.py:145] - Job "<lambda> (trigger: interval[0:01:00], next run at: 2025-09-26 00:15:28 +08)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\63931\OneDrive\Desktop\Dtracs-resource\dtracs\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "C:\Users\63931\OneDrive\Desktop\Dtracs-resource\dtracs\src\auth\auth_security.py", line 104, in <lambda>
+    lambda: asyncio.create_task(cleanup_expired_tokens()),
+            ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\63931\.pyenv\pyenv-win\versions\3.13.5\Lib\asyncio\tasks.py", line 407, in create_task
+    loop = events.get_running_loop()
+RuntimeError: no running event loop
+2025-09-26 00:15:21,231 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-26 00:15:24,701 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:15:24,985 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "<lambda>" to job store "default"
+2025-09-26 00:15:24,987 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-26 00:15:27,330 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-26 00:15:29,014 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:15:29,314 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "<lambda>" to job store "default"
+2025-09-26 00:15:29,317 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-26 00:16:29,029 - apscheduler.executors.default - INFO: [base.py:129] - Running job "<lambda> (trigger: interval[0:01:00], next run at: 2025-09-26 00:17:29 +08)" (scheduled at 2025-09-26 00:16:29.014296+08:00)
+2025-09-26 00:16:29,045 - apscheduler.executors.default - ERROR: [base.py:145] - Job "<lambda> (trigger: interval[0:01:00], next run at: 2025-09-26 00:17:29 +08)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\63931\OneDrive\Desktop\Dtracs-resource\dtracs\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "C:\Users\63931\OneDrive\Desktop\Dtracs-resource\dtracs\src\auth\auth_security.py", line 104, in <lambda>
+    lambda: asyncio.create_task(cleanup_expired_tokens()),
+            ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\63931\.pyenv\pyenv-win\versions\3.13.5\Lib\asyncio\tasks.py", line 407, in create_task
+    loop = events.get_running_loop()
+RuntimeError: no running event loop
+2025-09-26 00:16:34,851 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-26 00:16:41,399 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:16:41,661 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 00:16:41,662 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-26 00:16:57,898 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-26 00:17:40,094 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:17:40,430 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 00:17:40,431 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-26 00:18:04,268 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-26 00:18:06,500 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:18:06,753 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 00:18:06,754 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-26 00:18:07,074 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-26 00:18:08,759 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:18:09,102 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 00:18:09,103 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-26 00:18:38,766 - apscheduler.executors.default - INFO: [base.py:179] - Running job "cleanup_expired_tokens (trigger: interval[0:00:30], next run at: 2025-09-26 00:19:08 +08)" (scheduled at 2025-09-26 00:18:38.758881+08:00)
+2025-09-26 00:18:38,817 - apscheduler.executors.default - INFO: [base.py:203] - Job "cleanup_expired_tokens (trigger: interval[0:00:30], next run at: 2025-09-26 00:19:08 +08)" executed successfully
+2025-09-26 00:19:08,765 - apscheduler.executors.default - INFO: [base.py:179] - Running job "cleanup_expired_tokens (trigger: interval[0:00:30], next run at: 2025-09-26 00:19:38 +08)" (scheduled at 2025-09-26 00:19:08.758881+08:00)
+2025-09-26 00:19:08,771 - apscheduler.executors.default - INFO: [base.py:203] - Job "cleanup_expired_tokens (trigger: interval[0:00:30], next run at: 2025-09-26 00:19:38 +08)" executed successfully
+2025-09-26 00:19:29,885 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-26 00:19:32,557 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:19:32,905 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 00:19:32,906 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-26 00:19:33,667 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-26 00:19:35,662 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:19:35,952 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 00:19:35,953 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-26 00:19:43,212 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-26 00:19:45,361 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:19:45,659 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 00:19:45,660 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-26 00:19:55,683 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-26 00:20:03,398 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:20:03,714 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 00:20:03,714 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-26 00:20:35,457 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-26 00:20:39,036 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:20:39,483 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 00:20:39,484 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-26 00:20:39,905 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-26 00:20:47,693 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:20:48,246 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 00:20:48,247 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-26 00:20:48,896 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-26 00:20:51,787 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:20:52,227 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 00:20:52,229 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-26 00:20:58,222 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-26 00:21:00,803 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:21:01,234 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 00:21:01,235 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-26 00:21:05,400 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-26 00:21:08,160 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:21:08,641 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 00:21:08,642 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-26 00:21:09,629 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-26 00:21:11,875 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:21:12,256 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 00:21:12,257 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-26 00:27:20,789 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-26 00:27:22,604 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:27:22,897 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 00:27:22,898 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 00:36:15,283 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 00:36:18,410 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:36:18,776 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 00:36:18,777 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 00:43:02,668 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 00:43:04,826 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:43:05,143 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 00:43:05,144 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 00:43:07,719 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 00:43:09,456 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:43:09,815 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 00:43:09,815 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 00:45:50,496 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 00:45:52,483 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:45:52,756 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 00:45:52,757 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 00:53:44,822 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 00:53:46,968 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:53:49,453 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:53:53,012 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:53:59,681 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:54:04,508 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:54:09,401 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:54:13,909 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:54:16,201 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:54:18,211 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:54:27,380 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:54:34,928 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:55:14,980 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:55:15,300 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 00:55:15,300 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 00:55:26,369 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 00:55:28,445 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:55:31,408 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:55:44,059 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:55:51,450 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:56:04,968 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:56:40,718 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:56:48,828 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:57:35,485 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:57:35,742 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 00:57:35,743 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 00:58:41,923 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 00:58:43,718 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:59:13,991 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 00:59:14,391 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 00:59:14,392 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:00:05,015 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:00:08,151 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:00:08,407 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:00:08,408 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:00:19,048 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:00:20,830 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:00:21,193 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:00:21,194 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:03:08,689 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:03:10,239 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:03:10,533 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:03:10,534 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:03:12,779 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:03:14,243 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:03:16,622 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:03:17,004 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:03:17,005 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:03:20,018 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:03:21,601 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:03:21,891 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:03:21,892 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:03:24,056 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:03:25,788 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:03:26,053 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:03:26,053 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:03:36,934 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:03:38,720 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:03:39,037 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:03:39,037 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:04:30,514 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:04:34,180 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:04:34,455 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:04:34,456 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:04:37,146 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:04:42,597 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:04:42,923 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:04:42,923 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:04:48,616 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:04:50,128 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:04:50,504 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:04:50,506 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:04:52,315 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:04:53,701 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:04:53,950 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:04:53,951 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:04:55,795 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:04:57,109 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:04:57,479 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:04:57,480 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:05:03,130 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:05:04,594 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:05:04,871 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:05:04,872 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:05:08,730 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:05:10,372 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:05:10,745 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:05:10,747 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:05:11,397 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:05:12,755 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:05:13,049 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:05:13,051 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:07:14,463 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:07:25,420 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:07:26,036 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:07:26,037 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:07:26,794 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:07:29,661 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:07:30,176 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:07:30,177 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:07:31,271 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:07:34,502 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:07:35,208 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:07:35,210 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:07:36,186 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:07:39,190 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:07:39,729 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:07:39,731 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:07:40,486 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:07:42,825 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:07:43,228 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:07:43,229 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:09:42,306 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:09:46,598 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:09:46,947 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:09:46,948 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:09:51,085 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:09:53,486 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:10:01,326 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:10:01,701 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:10:01,702 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:10:08,685 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:10:18,792 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:10:19,138 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:10:19,139 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:11:15,936 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:11:18,049 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:11:18,375 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:11:18,376 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:11:20,737 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:11:24,395 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:11:31,127 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:11:40,906 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:11:56,484 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:12:37,484 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:12:39,067 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:12:52,444 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:12:52,738 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:12:52,738 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:12:56,213 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:12:58,471 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:13:00,504 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:13:13,412 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:13:14,010 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:13:14,011 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:13:18,389 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:13:22,774 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:13:23,159 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:13:23,160 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:13:24,145 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:13:29,406 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:13:30,116 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:13:30,117 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:13:30,962 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:13:33,509 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:13:33,913 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:13:33,914 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:14:46,745 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:14:48,890 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:14:49,319 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:14:49,321 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:14:50,945 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:14:52,685 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:14:52,948 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:14:52,950 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:14:54,555 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:14:55,962 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:14:56,266 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:14:56,266 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:15:19,194 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:15:20,689 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:15:21,134 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:15:21,135 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:15:24,149 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:15:26,894 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:15:27,313 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:15:27,314 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:15:27,748 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:15:29,443 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:15:29,787 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:15:29,788 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:15:34,426 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:15:36,622 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:15:37,012 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:15:37,013 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:15:37,668 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:15:39,112 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:15:39,373 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:15:39,375 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:15:55,259 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:15:59,368 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:15:59,632 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:15:59,632 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:16:03,719 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:16:07,359 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:16:07,649 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:16:07,650 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:16:10,139 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:16:12,054 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:16:15,644 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:16:21,728 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:16:22,016 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:16:22,087 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:16:31,687 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:16:35,237 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:16:35,563 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:16:35,563 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:16:39,131 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:16:40,778 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:16:41,092 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:16:41,093 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:17:53,566 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:17:56,427 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:17:56,688 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:17:56,689 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:18:00,228 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:18:01,884 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:18:02,171 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:18:02,172 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:18:10,422 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:18:15,377 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:18:15,755 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:18:15,756 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:18:28,332 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:18:29,876 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:18:30,229 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:18:30,230 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:18:33,044 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:18:35,021 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:18:35,405 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:18:35,406 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:18:46,119 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:18:47,883 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:18:48,177 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:18:48,177 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:19:04,619 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:19:05,802 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:19:06,103 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:19:06,104 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:21:17,176 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:21:18,858 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:21:19,217 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:21:19,218 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:21:19,756 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:21:21,280 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:21:21,518 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:21:21,518 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:21:22,054 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:21:23,298 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:21:23,520 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:21:23,521 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:21:25,583 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:21:28,383 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:21:28,606 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:21:28,606 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:21:32,120 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:21:33,462 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:21:33,770 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:21:33,772 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:21:34,424 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:21:37,335 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:21:37,694 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:21:37,695 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:21:39,839 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:21:41,544 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:21:42,029 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:21:42,030 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:21:44,267 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:21:47,782 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:21:48,727 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:21:48,729 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:21:52,143 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:22:02,374 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:22:02,644 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:22:02,645 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:23:08,609 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:23:11,589 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:23:17,477 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:23:17,676 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:23:17,677 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:23:52,729 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:23:55,970 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:23:56,214 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:23:56,215 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:24:21,686 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:24:23,209 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:24:23,529 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:24:23,530 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:24:57,219 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:24:58,446 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:24:58,741 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:24:58,742 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:25:14,089 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:25:17,916 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:25:24,811 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:25:34,258 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:25:34,566 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:25:34,567 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:26:26,714 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:26:30,033 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:26:30,301 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:26:30,302 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:26:50,397 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:26:55,924 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:27:02,707 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:27:09,763 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:27:13,967 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:27:21,025 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:27:26,220 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:27:26,502 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:27:26,503 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:27:28,032 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:27:30,205 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:27:30,741 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:27:30,743 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:27:31,607 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:27:33,758 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:27:34,359 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:27:34,360 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:27:36,096 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:27:38,296 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:27:38,656 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:27:38,657 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:27:55,471 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:28:00,760 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:28:01,072 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:28:01,073 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:29:05,189 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:29:08,290 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:29:08,771 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:29:08,772 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:29:21,703 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:29:24,154 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:29:24,510 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:29:24,511 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:29:30,277 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:29:32,284 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:29:32,730 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:29:32,731 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:29:41,790 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:29:44,250 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:29:44,517 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:29:44,518 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:31:47,327 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:31:49,758 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:31:54,564 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:31:57,287 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:32:09,902 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:32:13,760 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:32:19,262 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:32:24,593 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:33:06,739 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:33:29,116 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:33:29,626 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:33:29,627 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:33:30,072 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:33:31,764 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:33:32,021 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:33:32,022 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:33:47,992 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:33:50,536 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:33:51,080 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:33:51,081 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:33:51,718 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:33:54,665 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:33:55,183 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:33:55,185 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:34:31,766 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:34:35,015 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:34:35,297 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:34:35,298 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:35:20,907 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:35:22,727 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:35:23,151 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:35:23,152 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:35:23,903 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:35:25,638 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:35:25,922 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:35:25,923 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:35:32,391 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:35:39,398 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:35:39,728 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:35:39,729 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:35:44,580 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:35:45,956 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:35:46,215 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:35:46,216 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:36:12,654 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:36:14,628 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:36:14,952 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:36:14,954 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:36:48,572 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:36:51,165 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:36:51,681 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:36:51,682 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:36:52,222 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:36:54,279 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:36:54,617 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:36:54,618 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:38:37,791 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:38:39,887 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:38:40,143 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:38:40,144 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:38:57,636 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:38:59,445 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:38:59,743 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:38:59,744 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:40:42,752 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:40:44,989 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:40:45,374 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:40:45,375 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:40:48,393 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:40:50,110 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:40:57,476 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:40:57,725 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:40:57,726 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:41:29,108 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:41:30,646 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:41:30,887 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:41:30,888 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:41:44,014 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:41:45,386 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:41:45,632 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:41:45,633 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:42:49,774 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:42:51,668 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:42:51,951 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:42:51,952 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:42:52,283 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:42:53,740 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:42:53,982 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:42:53,983 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:43:04,822 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:43:06,528 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:43:12,481 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:43:12,740 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:43:12,741 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:43:26,700 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:43:29,609 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:43:29,887 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:43:29,888 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:44:15,022 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:44:16,967 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:44:17,268 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:44:17,269 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:47:19,198 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:47:20,973 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:47:21,221 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:47:21,221 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:47:37,635 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:47:39,379 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:47:39,759 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:47:39,759 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:47:43,293 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:47:45,552 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:47:45,916 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:47:45,917 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:47:55,555 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:47:57,252 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:47:57,557 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:47:57,558 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:49:49,071 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:49:50,755 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:49:50,987 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:49:50,988 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:49:53,671 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:49:55,180 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:49:55,458 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:49:55,459 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:50:09,711 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:50:12,063 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:50:15,255 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:50:15,782 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:50:15,784 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:50:37,776 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:50:45,813 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:50:49,513 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:50:55,107 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:51:01,646 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:51:07,179 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:51:07,599 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:51:07,601 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:51:15,228 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:51:17,083 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:51:17,406 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:51:17,407 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:54:28,405 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:54:30,076 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:54:30,384 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:54:30,385 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:54:32,646 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:54:33,831 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:54:34,049 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:54:34,050 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:57:21,061 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:57:23,476 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:57:23,879 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:57:23,881 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:57:24,549 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:57:26,553 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:57:30,449 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:57:30,754 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:57:30,755 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:58:39,732 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:58:41,060 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:58:41,371 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:58:41,371 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:58:51,335 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:58:54,047 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:58:54,606 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:58:54,607 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 01:58:56,863 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 01:58:59,740 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 01:59:00,200 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 01:59:00,201 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 02:00:12,092 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down

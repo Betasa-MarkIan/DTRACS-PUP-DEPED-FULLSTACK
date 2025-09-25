@@ -14,19 +14,6 @@ exc = ExceptionDict()
 router = APIRouter(prefix = "/admin", tags = ["Admin"])
 
 
-@router.get("/account/info/id/", status_code=status.HTTP_200_OK)
-async def get_admin_info(
-    user_id: str,
-    db: AsyncSession = Depends(get_db),
-    user: db_models.AdminAccount = Depends(get_current_user)
-) -> db_response.AdminResponse:
-
-    account_info = await helpers.get_admin_by_id(db, user_id)
-    response = db_response.AdminResponse.model_validate(account_info)
-
-    return response
-
-
 @router.post("/account/verification", status_code=status.HTTP_200_OK)
 async def get_accounts_to_verify(
     user_id: str,

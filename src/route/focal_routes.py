@@ -25,19 +25,6 @@ async def create_focal_account_request(
     return response
 
 
-@router.get("/account/info/id/", status_code=status.HTTP_200_OK)
-async def get_focal_verified_info(
-    user_id: str,
-    db: AsyncSession = Depends(get_db),
-    user: db_models.FocalAccountsVerified = Depends(get_current_user)
-) -> db_response.FocalResponse:
-
-    account_info = await helpers.get_focal_verified_by_id(db, user_id)
-    response = db_response.FocalResponse.model_validate(account_info)
-
-    return response
-
-
 @router.get("/school/verified/accounts", status_code=status.HTTP_200_OK)
 async def get_all_verified_school_accounts(db: AsyncSession = Depends(get_db)) -> list[db_response.SchoolResponse]:
 

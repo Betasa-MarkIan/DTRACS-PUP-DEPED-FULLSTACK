@@ -105,7 +105,7 @@ async def login (
         )
         account = result.scalar_one_or_none()
     
-    elif account is None:
+    if account is None:
         result = await db.execute(
         select(db_models.AdminAccount)
         .where(db_models.AdminAccount.email == login_data.email)

@@ -6,11 +6,23 @@ from database.redis import get_redis_client
 from typing import Any
 from uuid import uuid4
 
+
 class SlidingWindowRateLimiter:
     def __init__(self, redis_client: redis.Redis):
        self.redis = redis_client
 
     async def check_rate_limit(self, identifier: str, max_requests: int, window_seconds: int) -> dict[str, Any]:
+
+        blacklist = await get_blacklist_status(self.redis).blacklisting(identifier, window_seconds)
+        if blacklist["status"] == "blacklisted":
+            return {
+                "allowed": False,
+                "current_requests": 0,
+                "max_requests": max_requests,
+                "retry_after": blacklist["retry_after"],
+                "window_seconds": window_seconds
+            }
+        
         current_time = time.time()
         window_start = current_time - window_seconds
         key = f"rate_limit:login:{identifier}"
@@ -30,6 +42,7 @@ class SlidingWindowRateLimiter:
             minutes = round(retry_after/60)
             seconds = retry_after%60
             retry_after = f"{minutes}:{seconds}"
+            await get_blacklist_status(self.redis).blacklisting(identifier, retry_after)
 
             return {
                 "allowed": False,
@@ -51,10 +64,39 @@ class SlidingWindowRateLimiter:
             } 
 
 
+class BlacklistedUsers:
+    def __init__(self, redis_client: redis.Redis):
+       self.redis = redis_client
+
+    async def blacklisting(self, identifier: str, retry_after: int | None = None):
+        current_time = time.time()
+        key = f"blacklisted:{identifier}"
+        remaining_time = int(retry_after + current_time)
+
+        already_exist = await self.redis.zscore(key, identifier)
+        if already_exist:
+            if current_time > already_exist:
+                await self.redis.zrem(key, identifier)  
+
+                return {"status": "whitelisted", "retry_after": 0,"user": identifier} 
+            
+            else:
+                remaining_time = int(retry_after + current_time)
+                return {"status": "blacklisted", "retry_after": remaining_time, "user": identifier} 
+
+        await self.redis.zadd(key, {identifier: remaining_time})
+        await self.redis.expire(key, retry_after)
+
+        return {"status": "blacklisted", "retry_after": retry_after, "user": identifier} 
+
+
 async def get_rate_limiter(redis_client: redis.Redis = Depends(get_redis_client)) -> SlidingWindowRateLimiter:
 
     return SlidingWindowRateLimiter(redis_client)
-    
+
+async def get_blacklist_status(redis_client: redis.Redis = Depends(get_redis_client)) -> BlacklistedUsers:
+
+    return BlacklistedUsers(redis_client)
 
 async def sliding_window_rate_limit(
     request: Request,
