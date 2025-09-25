@@ -5,7 +5,7 @@ from sqlalchemy import union_all
 from schema import school_schemas, db_response
 from repository import school_repositories, focal_repositories
 from models import db_models
-from util import account_util
+from util import helpers
 from exceptions import ExceptionDict
 from passlib.context import CryptContext
 
@@ -78,9 +78,9 @@ async def update_school_account(
     user_id: str,
     updated_data: school_schemas.SchoolAccountUpdateSchema, 
 ):
-    account = await account_util.get_school_verified_by_id(db, user_id)
+    account = await helpers.get_school_verified_by_id(db, user_id)
     updates_dict = updated_data.model_dump(exclude_unset=True)
-    updates = await account_util.updating_account(updates_dict)
+    updates = await helpers.updating_account(updates_dict)
 
     allowed_fields_for_update = { "last_name", "first_name", "middle_name", "email", "contact_number" }
 
@@ -114,7 +114,7 @@ async def update_avatar_school_verified(
     user_id: str,
     new_avatar
 ):
-    account = await account_util.get_school_verified_by_id(db, user_id) 
+    account = await helpers.get_school_verified_by_id(db, user_id) 
     account.avatar = new_avatar
 
     return await school_repositories.push_commit(db, account)

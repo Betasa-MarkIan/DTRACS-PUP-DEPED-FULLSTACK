@@ -2,7 +2,7 @@ from datetime import datetime
 from passlib.context import CryptContext
 from exceptions import ExceptionDict
 from schema import focal_schemas, db_response
-from util import account_util
+from util import helpers
 from models import db_models
 from repository import focal_repositories
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -81,7 +81,7 @@ async def update_focal_account(
     user_id: str
 ):
     updates_dict = updated_data.model_dump(exclude_unset=True)
-    updates = await account_util.updating_account(updates_dict)
+    updates = await helpers.updating_account(updates_dict)
 
     allowed_fields_for_update = {"last_name", "first_name", "middle_name", "email", "contact_number"}
 
@@ -91,7 +91,7 @@ async def update_focal_account(
         if field in allowed_fields_for_update and value is not None
     }
 
-    account = await account_util.get_focal_verified_by_id(db, user_id)
+    account = await helpers.get_focal_verified_by_id(db, user_id)
     if account is None:
         raise exc.get("AccountNotFound")
     
@@ -109,7 +109,7 @@ async def update_avatar_focal_verified(
     user_id: str, 
     new_avatar
 ):
-    account = await account_util.get_focal_verified_by_id(db, user_id)
+    account = await helpers.get_focal_verified_by_id(db, user_id)
     account.avatar = new_avatar
 
     return await focal_repositories.push_commit(db, account)
@@ -144,7 +144,7 @@ async def get_focal_account_by_section(db: AsyncSession, section_designation: st
 
 async def all_assignment_display(db: AsyncSession, task_id: str):
     specific_task = await focal_repositories.get_task_by_id(db, task_id)
-    school_accounts = await account_util.get_ids_in_assignment(db, specific_task)
+    school_accounts = await helpers.get_ids_in_assignment(db, specific_task)
 
     displays = []
     for assignment in specific_task.assignments:
@@ -217,8 +217,8 @@ async def create_new_task(
     task_data: focal_schemas.CreateTask,
     accounts_assigned_status: list
 ):
-    creator_focal = await account_util.get_focal_verified_by_id(db, task_data.creator_id)
-    generated_task_id = await account_util.generate_task_id(db)
+    creator_focal = await helpers.get_focal_verified_by_id(db, task_data.creator_id)
+    generated_task_id = await helpers.generate_task_id(db)
     
     assignments = []
     for account in accounts_assigned_status:

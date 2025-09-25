@@ -1,12 +1,12 @@
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-from config import settings 
+from config.config import settings 
 from auth import token_schema
 from sqlalchemy import delete
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from database import AsyncSessionLocal
+from database.database import AsyncSessionLocal
 from models import db_models
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 import asyncio

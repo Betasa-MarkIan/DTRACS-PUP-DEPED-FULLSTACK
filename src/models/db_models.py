@@ -2,7 +2,7 @@ from sqlalchemy import event, text, Column, String, Integer, DateTime, Text, For
 from sqlalchemy.dialects.mysql import CHAR
 from sqlalchemy.orm import relationship
 from datetime import datetime
-from database import Base
+from database.database import Base
 import re
 
 class AdminAccount(Base):

@@ -2,13 +2,13 @@ from fastapi import APIRouter, Request, Response, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from exceptions import ExceptionDict
-from database import get_db
+from database.database import get_db
 from repository import focal_repositories
 from models import db_models
 from schema import db_response
-from config import settings
+from config.config import settings
 from datetime import datetime, timedelta
-from auth import auth_security, token_schema
+from auth import auth_security, token_schema, redis_dependencies
 from auth.auth_dependencies import get_current_user
 from typing import Any
 import secrets
@@ -85,7 +85,8 @@ async def login (
     request: Request,
     response: Response,
     login_data: token_schema.Login,
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
+    rate_limit: dict = Depends(redis_dependencies.sliding_window_rate_limit)
 ) -> token_schema.TokenData:
 
     """
@@ -118,6 +119,10 @@ async def login (
             headers={"WWW-Authenticate": "Bearer"},
         )
     
+    client_ip = request.state.real_ip
+    key = f"rate_limit:login:{client_ip}"
+    await redis_dependencies.rate_limiter.redis.delete(key)
+
     generate_tokens = await create_tokens(db, request, response, account.user_id)
 
     return generate_tokens

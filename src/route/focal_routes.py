@@ -2,10 +2,10 @@ from fastapi import APIRouter, status, Depends
 from repository import focal_repositories
 from schema import focal_schemas, db_response
 from service import focal_services
-from util import account_util
+from util import helpers
 from exceptions import ExceptionDict
 from sqlalchemy.ext.asyncio import AsyncSession
-from database import get_db
+from database.database import get_db
 
 exc = ExceptionDict()
 router = APIRouter(prefix="/focal", tags=["Focal"])
@@ -26,7 +26,7 @@ async def create_focal_account_request(
 @router.get("/account/info/id/", status_code=status.HTTP_200_OK)
 async def get_focal_verified_info(user_id: str, db: AsyncSession = Depends(get_db)) -> db_response.FocalResponse:
 
-    account_info = await account_util.get_focal_verified_by_id(db, user_id)
+    account_info = await helpers.get_focal_verified_by_id(db, user_id)
     response = db_response.FocalResponse.model_validate(account_info)
 
     return response
@@ -35,7 +35,7 @@ async def get_focal_verified_info(user_id: str, db: AsyncSession = Depends(get_d
 @router.get("/school/verified/accounts", status_code=status.HTTP_200_OK)
 async def get_all_verified_school_accounts(db: AsyncSession = Depends(get_db)) -> list[db_response.SchoolResponse]:
 
-    accounts = await account_util.get_school_verified(db)
+    accounts = await helpers.get_school_verified(db)
     accounts_list = [db_response.SchoolResponse.model_validate(account) for account in accounts]
     
     return accounts_list

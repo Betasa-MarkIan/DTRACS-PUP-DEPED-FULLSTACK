@@ -3,10 +3,10 @@ from repository import admin_repositories, focal_repositories
 from schema import admin_schemas, focal_schemas, db_response
 from service import admin_services, focal_services
 from repository import focal_repositories
-from util import account_util
+from util import helpers
 from exceptions import ExceptionDict
 from sqlalchemy.ext.asyncio import AsyncSession
-from database import get_db
+from database.database import get_db
 
 exc = ExceptionDict()
 router = APIRouter(prefix = "/admin", tags = ["Admin"])
@@ -35,7 +35,7 @@ async def get_accounts_to_verify(
 @router.get("/school/account/request")
 async def get_school_request_accounts(db: AsyncSession = Depends(get_db)) -> list[db_response.SchoolResponse]:
 
-    accounts = await account_util.get_schools_in_req_list(db)
+    accounts = await helpers.get_schools_in_req_list(db)
     accounts_list = [db_response.SchoolResponse.model_validate(account) for account in accounts]
 
     return accounts_list
@@ -44,7 +44,7 @@ async def get_school_request_accounts(db: AsyncSession = Depends(get_db)) -> lis
 @router.get("/focal/account/request")
 async def get_focal_request_accounts(db: AsyncSession = Depends(get_db)) -> list[db_response.FocalResponse]:
 
-    accounts = await account_util.get_focals_in_req_list(db)
+    accounts = await helpers.get_focals_in_req_list(db)
     accounts_list = [db_response.FocalResponse.model_validate(account) for account in accounts]
 
     return accounts_list
@@ -53,7 +53,7 @@ async def get_focal_request_accounts(db: AsyncSession = Depends(get_db)) -> list
 @router.get("/school/verified/accounts", status_code=status.HTTP_200_OK)
 async def get_all_verified_school_accounts(db: AsyncSession = Depends(get_db)) -> list[db_response.SchoolResponse]:
 
-    accounts = await account_util.get_school_verified(db)
+    accounts = await helpers.get_school_verified(db)
     accounts_list = [db_response.SchoolResponse.model_validate(account) for account in accounts]
     
     return accounts_list
@@ -62,7 +62,7 @@ async def get_all_verified_school_accounts(db: AsyncSession = Depends(get_db)) -
 @router.get("/focal/verified/accounts", status_code=status.HTTP_200_OK)
 async def get_all_verified_focal_accounts(db: AsyncSession = Depends(get_db))-> list[db_response.FocalResponse]:
 
-    accounts = await account_util.get_focal_verified(db)
+    accounts = await helpers.get_focal_verified(db)
     accounts_list = [db_response.FocalResponse.model_validate(account) for account in accounts]
     
     return accounts_list
@@ -71,7 +71,7 @@ async def get_all_verified_focal_accounts(db: AsyncSession = Depends(get_db))-> 
 @router.get("/accounts", status_code=status.HTTP_200_OK)
 async def get_admin_accounts(db: AsyncSession = Depends(get_db)) -> list[db_response.AdminResponse]:
 
-    accounts = await account_util.get_all_admin_accounts(db)
+    accounts = await helpers.get_all_admin_accounts(db)
     admin_accounts_list = [db_response.AdminResponse.model_validate(account) for account in accounts]
     
     return admin_accounts_list
@@ -108,7 +108,7 @@ async def delete_school_request(
     db: AsyncSession = Depends(get_db)
 ) -> db_response.SchoolResponse:
     
-    account = await account_util.get_school_req_by_id(db, user_id)
+    account = await helpers.get_school_req_by_id(db, user_id)
     await admin_services.admin_password_check(db, admin_credentials)
     deleted_account = await admin_repositories.push_delete(db, account)
     db_response.SchoolResponse.model_validate(deleted_account)
@@ -123,7 +123,7 @@ async def delete_focal_request(
     db: AsyncSession = Depends(get_db)
 ) -> db_response.FocalResponse:
 
-    account = await account_util.get_focal_req_by_id(db, user_id)
+    account = await helpers.get_focal_req_by_id(db, user_id)
     await admin_services.admin_password_check(db, admin_credentials)
     deleted_account = await admin_repositories.push_delete(db, account)
     db_response.FocalResponse.model_validate(deleted_account)    
@@ -138,7 +138,7 @@ async def delete_school_verified_account(
     db: AsyncSession = Depends(get_db)
 ) -> db_response.SchoolResponse:
 
-    account = await account_util.get_school_verified_by_id(db, user_id)
+    account = await helpers.get_school_verified_by_id(db, user_id)
     await admin_services.admin_password_check(db, admin_credentials)
     deleted_account = await admin_repositories.push_delete(db, account)
     await admin_repositories.push_delete_tokens(db, user_id)
@@ -154,7 +154,7 @@ async def delete_focal_verified_account(
     db: AsyncSession = Depends(get_db)
 ) -> db_response.FocalResponse:
 
-    account = await account_util.get_focal_verified_by_id(db, user_id)
+    account = await helpers.get_focal_verified_by_id(db, user_id)
     await admin_services.admin_password_check(db, admin_credentials)
     deleted_account = await admin_repositories.push_delete(db, account)
     await admin_repositories.push_delete_tokens(db, user_id)

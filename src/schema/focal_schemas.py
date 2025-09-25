@@ -1,4 +1,4 @@
-from util import global_util
+from util import global_enums
 from datetime import datetime
 from typing import Optional, List
 from pydantic import BaseModel, model_validator, EmailStr, Field
@@ -12,7 +12,7 @@ class RegistrationSchema(FocalBaseSchema):
     first_name: str
     last_name: str
     middle_name: str
-    office: global_util.OfficeEnum
+    office: global_enums.OfficeEnum
     section_designation: str = Field(default=None)
     email: EmailStr
     contact_number: str
@@ -49,7 +49,7 @@ class FocalAccountUpdateSchema(FocalBaseSchema):
 
 class FocalDesignationUpdateSchema(FocalBaseSchema):
     user_id: str
-    designation: global_util.SectionEnum
+    designation: global_enums.SectionEnum
 
 class FocalForgetPasswordSchema(FocalBaseSchema):
     email: str

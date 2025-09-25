@@ -25,7 +25,8 @@ sys.path.append("src")
 from exceptions import ExceptionDict
 from route import school_routes, focal_routes, admin_routes
 from auth import auth_route, auth_security
-from database import engine, Base, get_db
+from database.database import engine, Base, get_db
+from database.redis import get_redis_client
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -33,10 +34,15 @@ async def lifespan(app: FastAPI):
         #await conn.run_sync(Base.metadata.drop_all)  # Uncomment to reset database
         await conn.run_sync(Base.metadata.create_all)
     print("✅ Database tables created successfully")
+    
+    global redis_client
+    redis_client = await get_redis_client()
+    print("✅ Redis client initialized successfully")
 
     yield
 
     await engine.dispose()
+    await redis_client.close()
     print("Database connection closed")
 
 exc = ExceptionDict()
@@ -127,7 +133,6 @@ async def configure_logging():
 async def startup_event():
     auth_security.scheduler.start()
 
-
 @app.on_event("shutdown")
 async def shutdown_event():
     auth_security.scheduler.shutdown()
@@ -166,10 +171,17 @@ async def health_check(db: AsyncSession = Depends(get_db)):
     try:
         result = await db.execute(text("SELECT 1"))
         db_status = "connected" if result.scalar() == 1 else "disconnected"
+        redis_status = "connected"
+        try:
+            redis_client.ping()
+        except:
+            redis_status = "disconnected"
+
         return {
             "status": "healthy", 
             "database": db_status,
-            "message": "API and database are running successfully"
+            "redis": redis_status,
+            "message": "API, database, and Redis are running successfully"
         }
     except Exception as e:
         raise HTTPException(
@@ -177,16 +189,19 @@ async def health_check(db: AsyncSession = Depends(get_db)):
             detail=f"Database connection failed: {str(e)}"
         )
 
+
 app.include_router(auth_route.router)
 app.include_router(school_routes.router)
 app.include_router(focal_routes.router)
 app.include_router(admin_routes.router)
+
 
 async def exc_handler(req, exc):
     return JSONResponse(
         status_code = getattr(exc, 'status_code', status.HTTP_500_INTERNAL_SERVER_ERROR),
         content = {"message": getattr(exc, 'detail', str(exc))}
     )  
+
 
 app.add_exception_handler(exc.get_class("AccountNotFound"), exc_handler)
 app.add_exception_handler(exc.get_class("AccountRegistrationFailed"), exc_handler)
@@ -199,6 +214,7 @@ app.add_exception_handler(exc.get_class("AccountDuplication"), exc_handler)
 app.add_exception_handler(exc.get_class("TaskCreationFailed"), exc_handler)
 app.add_exception_handler(HTTPException, exc_handler)
 app.add_exception_handler(Exception, exc_handler)
+
 
 def main():
     """Start the application in production mode"""

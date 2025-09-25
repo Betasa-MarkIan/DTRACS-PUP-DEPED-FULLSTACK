@@ -12,6 +12,3 @@ env/
 
 # Environment variables
 .env
-
-# Seed files
-admin_seed.py
