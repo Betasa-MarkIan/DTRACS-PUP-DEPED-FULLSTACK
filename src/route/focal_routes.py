@@ -47,18 +47,6 @@ async def get_all_verified_school_accounts(db: AsyncSession = Depends(get_db)) -
     return accounts_list
 
 
-@router.post("/account/login")
-async def login_focal_account(
-    login_data: focal_schemas.FocalAccountLoginSchema,
-    db: AsyncSession = Depends(get_db)
-) -> db_response.FocalResponse:
-    
-    account = await focal_services.verify_login(db, login_data)
-    response = db_response.FocalResponse.model_validate(account)
-
-    return response
-
-
 @router.get("/school/accounts", status_code=status.HTTP_200_OK)
 async def get_school_accounts_by_school(
     school_name: str,

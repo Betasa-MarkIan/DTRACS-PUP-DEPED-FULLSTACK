@@ -3,6 +3,8 @@ from repository import admin_repositories, focal_repositories
 from schema import admin_schemas, focal_schemas, db_response
 from service import admin_services, focal_services
 from repository import focal_repositories
+from models import db_models
+from auth.auth_dependencies import get_current_user
 from util import helpers
 from exceptions import ExceptionDict
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -10,6 +12,19 @@ from database.database import get_db
 
 exc = ExceptionDict()
 router = APIRouter(prefix = "/admin", tags = ["Admin"])
+
+
+@router.get("/account/info/id/", status_code=status.HTTP_200_OK)
+async def get_admin_info(
+    user_id: str,
+    db: AsyncSession = Depends(get_db),
+    user: db_models.AdminAccount = Depends(get_current_user)
+) -> db_response.AdminResponse:
+
+    account_info = await helpers.get_admin_by_id(db, user_id)
+    response = db_response.AdminResponse.model_validate(account_info)
+
+    return response
 
 
 @router.post("/account/verification", status_code=status.HTTP_200_OK)
@@ -75,18 +90,6 @@ async def get_admin_accounts(db: AsyncSession = Depends(get_db)) -> list[db_resp
     admin_accounts_list = [db_response.AdminResponse.model_validate(account) for account in accounts]
     
     return admin_accounts_list
-
-
-@router.post("/login", status_code=status.HTTP_200_OK)
-async def admin_login(
-    login: admin_schemas.AdminLoginSchema,
-    db: AsyncSession = Depends(get_db)
-) -> db_response.AdminResponse:
-
-    account = await admin_repositories.verify_login(db, login)
-    valid_response = db_response.AdminResponse.model_validate(account)
-
-    return valid_response
 
 
 @router.put("/focal/designation/id/", status_code=status.HTTP_200_OK)

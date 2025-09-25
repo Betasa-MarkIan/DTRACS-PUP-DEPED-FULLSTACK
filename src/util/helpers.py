@@ -127,6 +127,19 @@ async def get_focal_verified_by_id(db: AsyncSession, user_id: str):
     return account
 
 
+async def get_admin_by_id(db: AsyncSession, user_id: str):
+    result = await db.execute(
+        select(db_models.AdminAccount)
+        .where(db_models.AdminAccount.user_id == user_id)
+    )
+    account = result.scalar_one_or_none()
+    
+    if account is None:
+        raise exc.get("AccountNotFound")
+
+    return account
+
+
 async def get_ids_in_assignment(db: AsyncSession, task: db_models.Tasks):
     account_ids = [
         assignment.school_id

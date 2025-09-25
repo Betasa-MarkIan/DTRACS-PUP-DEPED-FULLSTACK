@@ -2,6 +2,8 @@ from fastapi import APIRouter, status, Depends
 from schema import school_schemas, db_response
 from service import school_services, focal_services
 from repository import focal_repositories
+from models import db_models
+from auth.auth_dependencies import get_current_user
 from util import helpers
 from exceptions import ExceptionDict
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -24,22 +26,14 @@ async def create_school_account_request(
 
 
 @router.get("/account/info/id/", status_code=status.HTTP_200_OK)
-async def get_school_verified_info(user_id: str, db: AsyncSession = Depends(get_db)) -> db_response.SchoolResponse:
+async def get_school_verified_info(
+    user_id: str, 
+    db: AsyncSession = Depends(get_db),
+    user: db_models.SchoolAccountsVerified = Depends(get_current_user)
+) -> db_response.SchoolResponse:
 
     account_info = await helpers.get_school_verified_by_id(db, user_id)
     response = db_response.SchoolResponse.model_validate(account_info)
-
-    return response
-
-
-@router.post("/account/login", status_code=status.HTTP_200_OK)
-async def login_school_account(
-    login_data: school_schemas.SchoolAccountLoginSchema,
-    db: AsyncSession = Depends(get_db)
-) -> db_response.SchoolResponse:
-    
-    valid_login = await school_services.verify_login(db, login_data)
-    response = db_response.SchoolResponse.model_validate(valid_login)
 
     return response
 

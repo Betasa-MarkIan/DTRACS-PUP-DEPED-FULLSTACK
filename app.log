@@ -246,3 +246,91 @@
 2025-09-25 19:12:30,928 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
 2025-09-25 19:12:31,156 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "<lambda>" to job store "default"
 2025-09-25 19:12:31,157 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-25 20:06:08,814 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-25 20:06:49,051 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-25 20:06:49,712 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "<lambda>" to job store "default"
+2025-09-25 20:06:49,713 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-25 20:07:23,423 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-25 20:07:26,548 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-25 20:07:39,891 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-25 20:07:43,848 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-25 20:07:44,293 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "<lambda>" to job store "default"
+2025-09-25 20:07:44,294 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-25 21:00:44,472 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-25 21:00:58,198 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-25 21:00:59,401 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "<lambda>" to job store "default"
+2025-09-25 21:00:59,403 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-25 21:02:35,586 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-25 21:02:38,171 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-25 21:02:38,443 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "<lambda>" to job store "default"
+2025-09-25 21:02:38,444 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-25 21:02:38,775 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-25 21:02:40,266 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-25 21:02:40,552 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "<lambda>" to job store "default"
+2025-09-25 21:02:40,553 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-25 21:02:41,102 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-25 21:02:43,163 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-25 21:02:43,760 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "<lambda>" to job store "default"
+2025-09-25 21:02:43,761 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-25 21:02:44,522 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-25 21:02:50,548 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-25 21:02:51,218 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "<lambda>" to job store "default"
+2025-09-25 21:02:51,220 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-25 21:03:00,823 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-25 21:03:08,925 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-25 21:03:16,096 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-25 21:03:59,414 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-25 21:04:00,223 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "<lambda>" to job store "default"
+2025-09-25 21:04:00,224 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-25 21:05:00,896 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-25 21:05:04,614 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-25 21:05:04,990 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "<lambda>" to job store "default"
+2025-09-25 21:05:04,991 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-25 21:05:07,757 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-25 21:05:10,319 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-25 21:05:10,633 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "<lambda>" to job store "default"
+2025-09-25 21:05:10,635 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-25 21:05:14,630 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-25 21:05:18,699 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-25 21:05:19,151 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "<lambda>" to job store "default"
+2025-09-25 21:05:19,152 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-25 21:05:25,970 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-25 21:05:28,499 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-25 21:05:29,244 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "<lambda>" to job store "default"
+2025-09-25 21:05:29,246 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-25 21:05:31,609 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-25 21:05:34,193 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-25 21:05:34,619 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "<lambda>" to job store "default"
+2025-09-25 21:05:34,621 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-25 21:07:31,191 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-25 21:07:34,674 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-25 21:07:35,418 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "<lambda>" to job store "default"
+2025-09-25 21:07:35,419 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-25 21:07:51,608 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-25 21:07:54,258 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-25 21:07:54,513 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "<lambda>" to job store "default"
+2025-09-25 21:07:54,514 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-25 21:09:06,096 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-25 21:09:19,147 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-25 21:09:19,404 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "<lambda>" to job store "default"
+2025-09-25 21:09:19,405 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-25 21:09:31,537 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-25 21:09:59,897 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-25 21:10:00,445 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "<lambda>" to job store "default"
+2025-09-25 21:10:00,446 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-25 21:10:10,453 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-25 21:10:15,317 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-25 21:10:15,675 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "<lambda>" to job store "default"
+2025-09-25 21:10:15,676 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-25 21:10:16,220 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-25 21:10:18,812 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-25 21:10:19,061 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "<lambda>" to job store "default"
+2025-09-25 21:10:19,062 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-25 21:11:41,238 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-25 21:11:44,771 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-25 21:11:46,037 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "<lambda>" to job store "default"
+2025-09-25 21:11:46,039 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
+2025-09-25 21:12:23,746 - apscheduler.scheduler - INFO: [base.py:245] - Scheduler has been shut down
+2025-09-25 21:12:25,439 - apscheduler.scheduler - INFO: [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-25 21:12:25,710 - apscheduler.scheduler - INFO: [base.py:1090] - Added job "<lambda>" to job store "default"
+2025-09-25 21:12:25,711 - apscheduler.scheduler - INFO: [base.py:214] - Scheduler started
