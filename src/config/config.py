@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     MYSQL_USER: str
     MYSQL_PASSWORD: str
     MYSQL_DB: str
+    ADMIN_GMAIL: str
 
     # JWT secrets env
     JWT_ACCESS_SECRET_KEY: str

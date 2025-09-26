@@ -38,6 +38,7 @@ class AdminResponse(ResponseModel):
     last_name: str
     first_name: str 
     middle_name: str | None
+    email: str
 
     @computed_field
     @property
