@@ -3,6 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from exceptions import ExceptionDict
 from database.database import get_db
+from database.redis import get_redis_client
 from repository import focal_repositories
 from models import db_models
 from schema import db_response
@@ -89,9 +90,6 @@ async def login (
     rate_limit: dict = Depends(redis_dependencies.sliding_window_rate_limit)
 ) -> token_schema.TokenData:
 
-    """
-    user information will no longer come from the logins
-    """ 
     result = await db.execute(
         select(db_models.SchoolAccountsVerified)
         .where(db_models.SchoolAccountsVerified.email == login_data.email)
@@ -121,7 +119,13 @@ async def login (
     
     client_ip = request.state.real_ip
     key = f"rate_limit:login:{client_ip}"
-    await (await redis_dependencies.get_redis_client()).delete(key)
+    try: 
+        await (await get_redis_client()).delete(key)
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Key not in cache memory",
+        )
 
     generate_tokens = await create_tokens(db, request, response, account.user_id)
 
