@@ -33,9 +33,7 @@ async def get_user(
     elif "FOCAL" in current_user.user_id:
         json_response = db_response.FocalResponse.model_validate(current_user)
     else:
-        user_dict = current_user.__dict__.copy()
-        user_dict["email"] = settings.ADMIN_GMAIL  
-        json_response = db_response.AdminResponse.model_validate(user_dict)
+        json_response = db_response.AdminResponse.model_validate(current_user)
     
     return json_response
     

@@ -1754,3 +1754,16 @@ RuntimeError: no running event loop
 2025-09-26 13:42:10,800 - auth.auth_security - INFO - [auth_security.py:101] - 24 hour routine token clean up complete. Cleaned up 4 expired tokens
 2025-09-26 13:42:10,803 - apscheduler.executors.default - INFO - [base.py:203] - Job "cleanup_expired_tokens (trigger: interval[0:10:00], next run at: 2025-09-26 13:52:10 +08)" executed successfully
 2025-09-26 13:45:42,423 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 14:02:53,129 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 14:02:54,858 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 14:02:55,499 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 14:02:55,500 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 14:05:05,305 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 14:05:06,932 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 14:05:07,286 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 14:05:07,287 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 14:05:07,946 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
+2025-09-26 14:05:09,368 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-26 14:05:09,644 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-26 14:05:09,644 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-26 14:05:21,455 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down

@@ -1,6 +1,7 @@
 from pydantic import BaseModel, computed_field
 from typing import Optional
 from datetime import datetime
+from config.config import settings
 
 class ResponseModel(BaseModel):
    class Config: 
@@ -38,7 +39,7 @@ class AdminResponse(ResponseModel):
     last_name: str
     first_name: str 
     middle_name: str | None
-    email: str
+    email: str = settings.ADMIN_GMAIL
 
     @computed_field
     @property
