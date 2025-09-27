@@ -17,7 +17,6 @@ class BlacklistedUsers:
         blacklist_set_key = "blacklisted_users"
 
         if retry_after is None:
-            # Check if blacklisted entry exists and get expiry
             expiry = await self.redis.get(key)
             
             if not expiry:
@@ -37,8 +36,7 @@ class BlacklistedUsers:
             remaining_time = retry_after
             await self.redis.setex(key, retry_after, expires_at)
             await self.redis.sadd(blacklist_set_key, identifier)
-            # Set expiry on the set as well (slightly longer than max blacklist time)
-            await self.redis.expire(blacklist_set_key, retry_after + 3600)  # 1 hour buffer
+            await self.redis.expire(blacklist_set_key, retry_after + 3600)
             return {"status": "blacklisted", "retry_after": remaining_time, "user": identifier}
         
 
@@ -84,7 +82,6 @@ class SlidingWindowRateLimiter:
             else:
                 retry_after = window_seconds
             
-            # Blacklist the user with the calculated retry_after
             await blacklist_checker.blacklisting(identifier, retry_after)
 
             return {
@@ -97,7 +94,6 @@ class SlidingWindowRateLimiter:
         
         member = f"{identifier}:{time.time_ns()}"
         await self.redis.zadd(key, {member: current_time})
-        # Only set expiry if this is the first entry
         if current_requests == 0:
             await self.redis.expire(key, window_seconds)
 
@@ -117,7 +113,7 @@ async def get_rate_limiter(redis_client: redis.Redis = Depends(get_redis_client)
 async def sliding_window_rate_limit(
     request: Request,
     max_attempts: int = 10,
-    window_seconds: int = 60 * 10, #10 minutes,
+    window_seconds: int = 60 * 10, 
     rate_limiter: SlidingWindowRateLimiter = Depends(get_rate_limiter),
     blacklist: BlacklistedUsers = Depends(get_blacklist_status)
 ):
@@ -129,7 +125,6 @@ async def sliding_window_rate_limit(
     seconds = time_val % 60
     retry_after = f"{minutes:02d}:{seconds:02d}"
 
-    # Fix the formatting logic
     parts = retry_after.split(":")
     if len(parts) == 2:
         left, right = parts

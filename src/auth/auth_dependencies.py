@@ -9,23 +9,25 @@ from auth import auth_security
 security = HTTPBearer()
 
 async def get_current_user(
-    #request: Request,
+    request: Request,
     credentials: HTTPAuthorizationCredentials = Depends(security),
     db: AsyncSession = Depends(get_db)
 ):
-    # access_token = request.cookies.get("access_token")
-    # if not access_token:
-    #     raise HTTPException(
-    #         status_code=status.HTTP_401_UNAUTHORIZED,
-    #         detail="Could not validate credentials",
-    #         headers={"WWW-Authenticate": "Bearer"},
-    #     )
-    token = credentials.credentials
-    payload = auth_security.verify_access_token(token)
+    access_token = request.cookies.get("access_token")
+    if not access_token:
+        access_token = credentials.credentials
+    if not access_token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Access token missing from headers",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    payload = auth_security.verify_access_token(access_token)
     if not payload:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Token revoked or none existent",
+            detail="Access token not valid",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
@@ -58,7 +60,3 @@ async def get_current_user(
         )
     
     return user
-
-
-# DELETE FROM dtracs_database.user_tokens WHERE user_id = 'FOCAL-0003' AND expires_at < NOW();
-

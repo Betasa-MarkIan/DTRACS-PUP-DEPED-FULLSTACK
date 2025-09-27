@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Request, Response, Depends, HTTPException, status, Request
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from exceptions import ExceptionDict
@@ -18,6 +19,7 @@ import logging
 
 router = APIRouter(prefix="/auth", tags=["authentication"])
 exc = ExceptionDict()
+security = HTTPBearer()
 logger = logging.getLogger(__name__)
 
 
@@ -40,10 +42,14 @@ async def get_user(
 async def refresh_access_token(
     request: Request,
     response: Response,
+    credentials: HTTPAuthorizationCredentials = Depends(security),
     db: AsyncSession = Depends(get_db)
-) -> token_schema.TokenData:
+#) -> token_schema.TokenData:
+) -> dict:
     
     refresh_token = request.cookies.get("refresh_token")
+    if not refresh_token:
+        refresh_token = credentials.credentials
     if not refresh_token:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Refresh token missing from headers")
     
@@ -86,7 +92,8 @@ async def login (
     login_data: token_schema.Login,
     db: AsyncSession = Depends(get_db),
     rate_limit: dict = Depends(redis_dependencies.sliding_window_rate_limit)
-) -> token_schema.TokenData:
+#) -> token_schema.TokenData:
+) -> dict:
 
     result = await db.execute(
         select(db_models.SchoolAccountsVerified)
@@ -134,11 +141,15 @@ async def login (
 async def logout(
     request: Request,
     response: Response,
+    credentials: HTTPAuthorizationCredentials = Depends(security),
     current_user: Any = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
 
-    refresh_token = request.cookies.get("refresh_token")
+    # refresh_token = request.cookies.get("refresh_token")
+    # if not refresh_token:
+    #     
+    refresh_token = credentials.credentials
     if not refresh_token:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Refresh token missing")
     
@@ -148,7 +159,6 @@ async def logout(
         .where(db_models.UserTokens.user_id == current_user.user_id)
         .where(db_models.UserTokens.session_id == decoded_refresh_token["session_id"])
     )
-
     user = result.scalar_one_or_none()
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Refresh token revoked")
@@ -191,29 +201,62 @@ async def create_tokens(
 
     await focal_repositories.push_specific(db, db_refresh_token)
 
+    # response.set_cookie(
+    #     key="access_token",
+    #     value=access_token,
+    #     #httponly=True,
+    #     httponly=False,
+    #     max_age=settings.ACCESS_TOKEN_EXPIRE,
+    #     #secure=True,  # True in production (HTTPS only)
+    #     secure=False,  # True in production (HTTPS only)
+    #     #samesite="lax",
+    #     samesite="lax",
+    #     path="/",
+    #     domain="localhost" 
+    # )
+    # response.set_cookie(
+    #     key="refresh_token",
+    #     value=refresh_token,
+    #     #httponly=True,
+    #     httponly=False,
+    #     max_age=settings.REFRESH_TOKEN_EXPIRE,
+    #     #secure=True,
+    #     secure=False,
+    #     #samesite="lax",
+    #     samesite="lax",
+    #     path="/auth" ,
+    #     domain="localhost" 
+    # )
+
     response.set_cookie(
         key="access_token",
         value=access_token,
         httponly=True,
-        expires=settings.ACCESS_TOKEN_EXPIRE,
-        secure=not settings.DEBUG,  # True in production (HTTPS only)
-        samesite="lax",
-        path="/"
+        max_age=settings.ACCESS_TOKEN_EXPIRE,
+        secure=True,              # MUST be true on https
+        samesite="None",          # required for cross-site cookies
+        path="/",
     )
+
     response.set_cookie(
         key="refresh_token",
         value=refresh_token,
         httponly=True,
-        expires=settings.REFRESH_TOKEN_EXPIRE,
-        secure=not settings.DEBUG,
-        samesite="lax",
-        path="/auth" 
+        max_age=settings.REFRESH_TOKEN_EXPIRE,
+        secure=True,              # MUST be true on https
+        samesite="None",          # required for cross-site cookies
+        path="/auth",
     )
 
-    token_response = token_schema.TokenData(
-        access_token=access_token,
-        token_type="Bearer",
-        user_id=user_id
-    )
-
-    return token_response
+    # token_response = token_schema.TokenData(
+    #     access_token=access_token,
+    #     token_type="Bearer",
+    #     user_id=user_id
+    # )
+    #return token_response
+    return {
+        "access_token":access_token,
+        "refresh_token":refresh_token,
+        "token_type":"Bearer",
+        "user_id":user_id
+    }
