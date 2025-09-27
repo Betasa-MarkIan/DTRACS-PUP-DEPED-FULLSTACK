@@ -11,7 +11,6 @@ from typing import Any
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 exc = ExceptionDict()
 
-
 async def push_specific(db: AsyncSession, obj: Any):
     try:
         db.add(obj)

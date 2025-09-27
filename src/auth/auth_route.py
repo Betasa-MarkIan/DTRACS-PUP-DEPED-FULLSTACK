@@ -20,8 +20,6 @@ router = APIRouter(prefix="/auth", tags=["authentication"])
 exc = ExceptionDict()
 logger = logging.getLogger(__name__)
 
-# TODO: Add admin to auth
-# TODO: Login Rate limiter Redis
 
 @router.get("/get/current/user", status_code=status.HTTP_200_OK)
 async def get_user(
@@ -47,11 +45,11 @@ async def refresh_access_token(
     
     refresh_token = request.cookies.get("refresh_token")
     if not refresh_token:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Refresh token missing")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Refresh token missing from headers")
     
     payload = auth_security.verify_refresh_token(refresh_token)
     if not payload:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Refresh token missing")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token")
 
     user_id = payload.get("sub")
     session_id = payload.get("session_id")

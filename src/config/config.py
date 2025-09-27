@@ -13,8 +13,8 @@ class Settings(BaseSettings):
     JWT_ACCESS_SECRET_KEY: str
     JWT_REFRESH_SECRET_KEY: str
     JWT_ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE: int = 60
-    REFRESH_TOKEN_EXPIRE: int = 60 * 5
+    ACCESS_TOKEN_EXPIRE: int = 45
+    REFRESH_TOKEN_EXPIRE: int = 60 * 3
 
     # Redis credentials env
     REDIS_HOST: str = "localhost"
