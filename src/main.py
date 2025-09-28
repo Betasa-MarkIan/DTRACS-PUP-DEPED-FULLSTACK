@@ -154,7 +154,7 @@ async def whats_my_ip(request: Request):
         "client_host": client_host,
         "real_ip_from_middleware": real_ip,
         "ip_headers": headers_info,
-        "environment": os.getenv("RAILWAY_ENVIRONMENT", "development")
+        "environment": os.getenv("RAILWAY_ENVIRONMENT_NAME", "development")
     }
 
 
