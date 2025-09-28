@@ -7,12 +7,9 @@ class ExceptionRaised(HTTPException):
             detail: str = "Internal server error",
             error: Exception = None
         ):
-    
         if error:
             detail += f": {str(error)}"
-
         super().__init__(status_code=status_code, detail=detail)
-
 
 class ExceptionDict:
     def __init__(self):
@@ -27,7 +24,6 @@ class ExceptionDict:
             "AccountDuplication": ExceptionRaised,
             "TaskCreationFailed": ExceptionRaised,
         }
-
         self.exceptions_details = {
             "InvalidCredentials": lambda: ExceptionRaised(
                 status_code=status.HTTP_401_UNAUTHORIZED,
@@ -69,9 +65,11 @@ class ExceptionDict:
                 error=error
             )
         } 
-    
-    def get(self, name: str):
-        return self.exceptions_details[name]()
-
+    def get(self, name: str, error: Exception = None):
+        if error:
+            return self.exceptions_details[name](error=error)
+        else:
+            return self.exceptions_details[name]()
+        
     def get_class(self, name: str):
         return self.exceptions_class[name]

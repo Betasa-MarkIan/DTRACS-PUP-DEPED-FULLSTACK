@@ -1,22 +1,24 @@
 from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
-    # Database credentials env
+    """Database credentials env"""
     MYSQL_HOST: str
     MYSQL_PORT: str
     MYSQL_USER: str
     MYSQL_PASSWORD: str
     MYSQL_DB: str
+
+    """Admin email"""
     ADMIN_GMAIL: str
 
-    # JWT secrets env
+    """JWT secrets env"""
     JWT_ACCESS_SECRET_KEY: str
     JWT_REFRESH_SECRET_KEY: str
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE: int = 60 * 60 * 24
     REFRESH_TOKEN_EXPIRE: int = 60 * 60 * 24 * 7 # one week
 
-    # Redis credentials env
+    """Redis credentials env"""
     REDIS_HOST: str = "localhost"
     REDIS_PORT: int = 6379
 

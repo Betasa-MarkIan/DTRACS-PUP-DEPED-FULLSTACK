@@ -33,8 +33,3 @@ class Login(BaseModel):
 
     class config:
         from_attributes=True
-
-
-
-# add a field for refresh_token status
-# auto delete once the refresh_token expires

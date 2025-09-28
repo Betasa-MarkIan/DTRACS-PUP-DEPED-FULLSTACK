@@ -5,7 +5,6 @@ class SchoolBaseSchema(BaseModel):
     class Config: 
         from_attributes = True
 
-# * Account Schemas
 class RegistrationSchema(SchoolBaseSchema):
     user_id: str = Field(default="PENDING")
     first_name: str 

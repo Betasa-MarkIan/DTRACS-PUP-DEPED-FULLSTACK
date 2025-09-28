@@ -12,9 +12,7 @@ from passlib.context import CryptContext
 exc = ExceptionDict()
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-
 async def create_school_account_request(db: AsyncSession, school_request: school_schemas.RegistrationSchema):
-
     hashed_password = pwd_context.hash(school_request.password)
     account_data = {
         "user_id": None,
@@ -31,47 +29,34 @@ async def create_school_account_request(db: AsyncSession, school_request: school
         "registration_date": datetime.now(),
         "avatar": None,
     }
-    
     if account_data is None:
         raise exc.get("AccountRegistrationFailed")
     
     email_check = union_all(
         select(db_models.SchoolAccountsRequest.email).where(db_models.SchoolAccountsRequest.email == account_data["email"]),
-
         select(db_models.FocalAccountsRequest.email).where(db_models.FocalAccountsRequest.email == account_data["email"]),
-
         select(db_models.SchoolAccountsVerified.email).where(db_models.SchoolAccountsVerified.email == account_data["email"]),
-
         select(db_models.FocalAccountsVerified.email).where(db_models.FocalAccountsVerified.email == account_data["email"]),
-
         select(db_models.AdminAccount.email).where(db_models.AdminAccount.email == account_data["email"])
-        
     ).alias("email_check")
 
     result = await db.execute(select(email_check))
     email_exist = result.scalar_one_or_none()
     if email_exist:
         raise exc.get("AccountDuplication")
-    
     return await school_repositories.create_school_request(db, account_data)
 
-
 async def verify_login(db: AsyncSession, login_data: school_schemas.SchoolAccountLoginSchema):
-
     result = await db.execute(
         select(db_models.SchoolAccountsVerified)
         .where(db_models.SchoolAccountsVerified.email == login_data.email)
     )
     account = result.scalar_one_or_none()
-
     if account is None:
         raise exc.get("AccountNotFound")
-
     if not pwd_context.verify(login_data.password, account.password):
         raise exc.get("InvalidCredentials")
-    
     return account
-
 
 async def update_school_account(
     db: AsyncSession, 
@@ -83,32 +68,25 @@ async def update_school_account(
     updates = await helpers.updating_account(updates_dict)
 
     allowed_fields_for_update = { "last_name", "first_name", "middle_name", "email", "contact_number" }
-
     valid_updates = {
         field: value
         for field, value in updates.items()
         if field in allowed_fields_for_update and value is not None
     }
-
     result = await db.execute(
             select(db_models.SchoolAccountsVerified)
             .where(db_models.SchoolAccountsVerified.user_id == account.user_id)
     )
-
     account = result.scalar_one_or_none()
-
     if account is None:
         raise exc.get("AccountNotFound")
-
     for field, value in valid_updates.items():
         setattr(account, field, value)
     
     middle_part = f" {account.middle_name}" if account.middle_name else ""
     account.full_name = f"{account.last_name}, {account.first_name}{middle_part}".strip()
-
     return await school_repositories.push_commit(db, account)
     
-
 async def update_avatar_school_verified(
     db: AsyncSession, 
     user_id: str,
@@ -116,16 +94,13 @@ async def update_avatar_school_verified(
 ):
     account = await helpers.get_school_verified_by_id(db, user_id) 
     account.avatar = new_avatar
-
     return await school_repositories.push_commit(db, account)
-
 
 async def update_remarks(
     db: AsyncSession,
     to_update: school_schemas.UpdateRemarks,
 ): 
     task = await focal_repositories.get_task_by_id(db, to_update.task_id)
-
     school_found = False
     for assignment in task.assignments:
         if assignment.school_id == to_update.school_id:
@@ -136,24 +111,17 @@ async def update_remarks(
         
             if (assignment.status == "COMPLETE") and (assignment.status_updated_at < task.deadline):
                 assignment.remarks = "TURNED IN ON TIME"
-            
             elif ((assignment.status == "COMPLETE")) and (assignment.status_updated_at >= task.deadline):
-                assignment.remarks = "TURNED IN LATE"
-            
-            # default = PENDING
+                assignment.remarks = "TURNED IN LATE"            
             elif (assignment.status == "INCOMPLETE") and (assignment.status_updated_at <= task.deadline):
                 assignment.remarks = "PENDING"
-
             elif (assignment.status == "INCOMPLETE") and (assignment.status_updated_at >= task.deadline):
                 assignment.remarks = "MISSING"
-
             break
                 
     if not school_found:
         raise exc.get("AccountNotFound")
-        
     return await school_repositories.push_commit(db, assignment)
-
 
 async def assignment_display(db: AsyncSession, assigned: db_models.TaskAssignment):
     result = await db.execute(
@@ -161,10 +129,8 @@ async def assignment_display(db: AsyncSession, assigned: db_models.TaskAssignmen
         .where(db_models.SchoolAccountsVerified.user_id == assigned.school_id)
     )
     account = result.scalar_one_or_none()
-
     if account is None:
         raise exc.get("AccountNotFound")
-
     if account.user_id == assigned.school_id:
         display = db_response.AssignedResponse(
         task_id=assigned.task_id,
@@ -177,23 +143,17 @@ async def assignment_display(db: AsyncSession, assigned: db_models.TaskAssignmen
         remarks=assigned.remarks,
         links=assigned.links
         )
-        
     if not display:
         raise exc.get("RetrievingTasksFailed")
-    
     return display
-
 
 async def get_school_assignments(db: AsyncSession, user_id: str):
     tasks = await focal_repositories.get_all_task(db)
-
     school_tasks = [
         task
         for task in tasks
         if any(assigned.school_id == user_id for assigned in task.assignments)
     ]
-
     if not school_tasks:
         raise exc.get("RetrievingTasksFailed")
-    
     return school_tasks

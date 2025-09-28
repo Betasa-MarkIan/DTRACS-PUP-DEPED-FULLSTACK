@@ -1,5 +1,5 @@
 from repository import admin_repositories
-from exceptions import ExceptionRaised, ExceptionDict
+from exceptions import ExceptionDict
 from schema import focal_schemas, admin_schemas
 from models import db_models
 from passlib.context import CryptContext
@@ -9,14 +9,12 @@ from sqlalchemy.future import select
 exc = ExceptionDict()
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-
 async def add_verified_school(db: AsyncSession, user_id: str):
     result = await db.execute(
         select(db_models.SchoolAccountsRequest)
         .where(db_models.SchoolAccountsRequest.user_id == user_id)   
     )
     request_account = result.scalar_one_or_none()
-
     if request_account is None:
         return None
 
@@ -26,12 +24,9 @@ async def add_verified_school(db: AsyncSession, user_id: str):
         if not key.startswith("_") 
     }
     account_data["user_id"] = None
-    
     verified_account = db_models.SchoolAccountsVerified(**account_data)
     await db.delete(request_account)    
-
     return await admin_repositories.push_specific(db, verified_account)
-
 
 async def add_verified_focal(db: AsyncSession, user_id: str):
     result = await db.execute(
@@ -42,19 +37,16 @@ async def add_verified_focal(db: AsyncSession, user_id: str):
 
     if request_account is None:
         return None
-    
     account_data = {
         key:value
         for key, value in request_account.__dict__.items()
         if not key.startswith("_")
     }
     account_data["user_id"] = None
-    
+
     verified_account = db_models.FocalAccountsVerified(**account_data)
     await db.delete(request_account)
-
     return await admin_repositories.push_specific(db, verified_account)
-
 
 async def update_designation(db: AsyncSession, data: focal_schemas.FocalDesignationUpdateSchema):
     result = await db.execute(
@@ -62,35 +54,27 @@ async def update_designation(db: AsyncSession, data: focal_schemas.FocalDesignat
         .where(db_models.FocalAccountsVerified.user_id == data.user_id)
     )
     account = result.scalar_one_or_none()
-
     if account is None:
         raise exc.get("AccountNotFound")
     
     account.section_designation = data.designation
-
     return await admin_repositories.push_commit(db, account)
-
 
 async def admin_password_check(db: AsyncSession, admin_credentials: admin_schemas.AdminVerificationCheck):
     result  = await db.execute(
         select(db_models.AdminAccount)
         .where(db_models.AdminAccount.user_id == admin_credentials.user_id)
     )
-
     account = result.scalar_one_or_none()
     if account is None:
         raise exc.get("AccountNotFound")
-
     if not pwd_context.verify(admin_credentials.password, account.password):
         raise exc.get("InvalidCredentials")
-    
     return None
-
 
 async def task_status_counter(tasks: list):
     list_of_task_status = []
     complete_count = incomplete_count = ongoing_count = 0
-
     for task in tasks:
         if task.task_status == "COMPLETE":
             complete_count += 1
@@ -105,7 +89,6 @@ async def task_status_counter(tasks: list):
         "incomplete": incomplete_count,
         "ongoing": ongoing_count
     }
-    
     list_of_task_status.append(task_data)
     return list_of_task_status
 
@@ -125,7 +108,5 @@ async def assignments_status_counter(tasks: list):
             "complete": complete,
             "incomplete": incomplete,
             }
-        
         list_of_statuses.append(assigned_data)
-
     return list_of_statuses

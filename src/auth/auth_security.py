@@ -4,7 +4,6 @@ from passlib.context import CryptContext
 from config.config import settings 
 from auth import token_schema
 from sqlalchemy import delete
-from sqlalchemy.future import select
 from database.database import AsyncSessionLocal
 from models import db_models
 from apscheduler.schedulers.asyncio import AsyncIOScheduler

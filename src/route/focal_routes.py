@@ -1,50 +1,71 @@
-from fastapi import APIRouter, status, Depends
+from fastapi import APIRouter, status, HTTPException, Depends, Request, Response
 from repository import focal_repositories
 from schema import focal_schemas, db_response
 from service import focal_services
 from models import db_models
+from auth import auth_dependencies, token_schema, redis_dependencies, auth_security
 from util import helpers
-from auth.auth_dependencies import get_current_user
 from exceptions import ExceptionDict
+from sqlalchemy.future import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from database.database import get_db
+from database.redis import get_redis_client
 
 exc = ExceptionDict()
 router = APIRouter(prefix="/focal", tags=["Focal"])
 
-
 @router.post("/account/registration", status_code=status.HTTP_201_CREATED)
-async def create_focal_account_request(
-    focal_account_data: focal_schemas.RegistrationSchema,
-    db: AsyncSession = Depends(get_db)
-) -> db_response.FocalResponse:
-    
+async def create_focal_account_request(focal_account_data: focal_schemas.RegistrationSchema, db: AsyncSession = Depends(get_db)) -> db_response.FocalResponse:
     account_request = await focal_services.create_focal_account_request(db, focal_account_data)   
     response = db_response.FocalResponse.model_validate(account_request)
-
     return response
 
+@router.post("/login", status_code=status.HTTP_200_OK)
+async def login (
+    request: Request,
+    response: Response,
+    login_data: token_schema.Login,
+    db: AsyncSession = Depends(get_db),
+    rate_limit: dict = Depends(redis_dependencies.sliding_window_rate_limit)
+) -> token_schema.TokenData:
+    
+    result = await db.execute(
+        select(db_models.FocalAccountsVerified)
+        .where(db_models.FocalAccountsVerified.email == login_data.email)
+    )
+    account = result.scalar_one_or_none()
+    if account is None:
+        raise exc.get("AccountNotFound")
+    
+    if not auth_security.verify_password(login_data.password, account.password):
+        raise exc.get("InvalidCredentials")
+    
+    client_ip = request.state.real_ip
+    key = f"rate_limit:login:{client_ip}"
+    try: 
+        await (await get_redis_client()).delete(key)
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Key not in cache memory",
+        )
+    return await auth_dependencies.create_tokens(db, request, response, account.user_id)
+
+@router.get("/account/info/id/", status_code=status.HTTP_200_OK)
+async def get_focal_info( user: db_models.FocalAccountsVerified = Depends(auth_dependencies.get_current_user)) -> db_response.FocalResponse:
+    return db_response.FocalResponse.model_validate(user)
 
 @router.get("/school/verified/accounts", status_code=status.HTTP_200_OK)
 async def get_all_verified_school_accounts(db: AsyncSession = Depends(get_db)) -> list[db_response.SchoolResponse]:
-
     accounts = await helpers.get_school_verified(db)
     accounts_list = [db_response.SchoolResponse.model_validate(account) for account in accounts]
-    
     return accounts_list
-
 
 @router.get("/school/accounts", status_code=status.HTTP_200_OK)
-async def get_school_accounts_by_school(
-    school_name: str,
-    db: AsyncSession = Depends(get_db)
-) -> list[db_response.SchoolResponse]:
-    
+async def get_school_accounts_by_school(school_name: str, db: AsyncSession = Depends(get_db)) -> list[db_response.SchoolResponse]:
     accounts = await focal_services.get_school_verified_by_school_name(db, school_name)
     accounts_list = [db_response.SchoolResponse.model_validate(account)for account in accounts]
-
     return accounts_list
-
 
 @router.put("/account/update/id/") 
 async def update_focal_account(
@@ -55,9 +76,7 @@ async def update_focal_account(
 
     updated_account = await focal_services.update_focal_account(db, updated_data, user_id)
     await focal_repositories.update_global_credentials(db, updated_account)
-
     return db_response.FocalResponse.model_validate(updated_account)
-
 
 @router.put("/account/avatar/id/", status_code=status.HTTP_200_OK)
 async def update_focal_avatar(
@@ -68,65 +87,43 @@ async def update_focal_avatar(
     
     updated_account = await focal_services.update_avatar_focal_verified(db, user_id, avatar)
     response = db_response.FocalResponse.model_validate(updated_account)
-    
     return response
-
 
 @router.get("/tasks/all", status_code=status.HTTP_200_OK)
 async def get_all_task(db: AsyncSession = Depends(get_db)) -> list[db_response.TaskResponse]:
-
     updated_tasks = await focal_repositories.get_all_task(db)
     response = [db_response.TaskResponse.model_validate(task) for task in updated_tasks]
-
     return response
-
 
 @router.get("/tasks/all/focal_id/", status_code=status.HTTP_200_OK)
 async def get_tasks_per_focal(user_id: str, db: AsyncSession = Depends(get_db)) -> list[db_response.TaskResponse]:
-
     tasks = await focal_repositories.get_tasks_of_focal(db, user_id)
     response = [db_response.TaskResponse.model_validate(task) for task in tasks]
-    
     return response
-
 
 @router.get("/task/id/", status_code=status.HTTP_200_OK)
 async def get_task_by_id(task_id: str, db: AsyncSession = Depends(get_db)) -> db_response.TaskResponse:
-
     task = await focal_repositories.get_task_by_id(db, task_id)
     response = db_response.TaskResponse.model_validate(task)
-
     return response
-
 
 @router.get("/task/assignments", status_code=status.HTTP_200_OK)
 async def assignments_by_task(task_id: str, db: AsyncSession = Depends(get_db)) -> list [db_response.AssignedResponse]:
-
     return await focal_services.all_assignment_display(db, task_id)
-
 
 @router.delete("/task/delete/id/", status_code=status.HTTP_200_OK)
 async def delete_task(task_id: str, db: AsyncSession = Depends(get_db)) -> db_response.TaskResponse:
-
     task = await focal_repositories.get_task_by_id(db, task_id)
     deleted_task = await focal_repositories.push_delete(db, task)
     response = db_response.TaskResponse.model_validate(deleted_task)
-    
     return response
 
-
 @router.post("/task/new-task", status_code=status.HTTP_201_CREATED)
-async def create_new_task(
-    task_data: focal_schemas.CreateTask,
-    db: AsyncSession = Depends(get_db)
-) -> db_response.TaskResponse:
-    
+async def create_new_task(task_data: focal_schemas.CreateTask, db: AsyncSession = Depends(get_db)) -> db_response.TaskResponse:
     accounts_assigned_status = await focal_services.accounts_assigned_status(db, task_data.accounts_required)
     create_task = await focal_services.create_new_task(db, task_data, accounts_assigned_status)
     response = db_response.TaskResponse.model_validate(create_task)    
-
     return response
-
 
 @router.put("/task/update/id/", status_code=status.HTTP_200_OK)
 async def update_task(
@@ -137,25 +134,16 @@ async def update_task(
     
     updated_task = await focal_services.update_task(db, task_id, update_task)
     response = db_response.TaskResponse.model_validate(updated_task)
-    
     return response
 
-
 @router.post("/create/multiple/tasks", status_code=status.HTTP_200_OK)
-async def create_many_task(
-    tasks: list[focal_schemas.CreateTask],
-    db: AsyncSession = Depends(get_db)
-) -> list[db_response.TaskResponse]:
-    
+async def create_many_task(tasks: list[focal_schemas.CreateTask], db: AsyncSession = Depends(get_db)) -> list[db_response.TaskResponse]:
     created_task=[]
     for task in tasks:
         create = await create_new_task(task, db)
         created_task.append(create)
-    
     return created_task
-
 
 @router.get("/all/task/assignments", status_code=status.HTTP_200_OK)
 async def assignments_by_task(task_id: str, db: AsyncSession = Depends(get_db)) -> list [db_response.AssignedResponse]:
-
     return await focal_services.all_assignment_display(db, task_id)

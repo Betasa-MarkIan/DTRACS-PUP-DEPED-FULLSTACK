@@ -16,9 +16,8 @@ class AdminAccount(Base):
     middle_name = Column(String(50), nullable=True)
     email = Column(String(150), unique=True, index=True, nullable=False)
     password = Column(String(255), nullable=False)
-    failed_login_attempt = Column(Integer, default=0)
-    lock_until = Column(DateTime, nullable=True)
-
+    # failed_login_attempt = Column(Integer, default=0)
+    # lock_until = Column(DateTime, nullable=True)
 
 class FocalAccountsRequest(Base):
     __tablename__ = "focal_request"
@@ -36,7 +35,6 @@ class FocalAccountsRequest(Base):
     registration_date = Column(DateTime, default=datetime.now)
     avatar = Column(String(500), nullable=True)
 
-
 class FocalAccountsVerified(Base):
     __tablename__ = "focal_verified"
 
@@ -52,9 +50,7 @@ class FocalAccountsVerified(Base):
     password = Column(String(255), nullable=False)
     registration_date = Column(DateTime, default=datetime.now)
     avatar = Column(String(500), nullable=True)
-    
     task_creator = relationship("Tasks", back_populates="creator", cascade="all, delete-orphan")
-
 
 class SchoolAccountsRequest(Base):
     __tablename__ = "school_request"
@@ -73,7 +69,6 @@ class SchoolAccountsRequest(Base):
     registration_date = Column(DateTime, default=datetime.now)
     avatar = Column(String(500), nullable=True)
 
-
 class SchoolAccountsVerified(Base):
     __tablename__ = "school_verified"
 
@@ -90,9 +85,7 @@ class SchoolAccountsVerified(Base):
     password = Column(String(255), nullable=False)
     registration_date = Column(DateTime, default=datetime.now)
     avatar = Column(String(500), nullable=True)
-
     assignments = relationship("TaskAssignment", back_populates="account", cascade="all, delete-orphan")
-
 
 class UserTokens(Base):
     __tablename__ = "user_tokens"
@@ -103,7 +96,6 @@ class UserTokens(Base):
     expires_at = Column(DateTime, nullable=False)
     created_at = Column(DateTime, default=datetime.now())
     session_id = Column(String(64), primary_key=True, default=None)
-
 
 class Tasks(Base):
     __tablename__ = "tasks"
@@ -121,11 +113,8 @@ class Tasks(Base):
     task_status = Column(String(100), nullable=False)
     status_updated_at = Column(DateTime, default=None)
     links = Column(JSON, default=list, nullable=True)
-
     creator = relationship("FocalAccountsVerified", back_populates="task_creator")
-
     assignments = relationship("TaskAssignment", back_populates="task", cascade="all")
-
 
 class TaskAssignment(Base):
     __tablename__ = "task_assignment"
@@ -138,13 +127,10 @@ class TaskAssignment(Base):
     status_updated_at = Column(DateTime, default=None)
     remarks = Column(String(150), default="PENDING", nullable=True)
     links = Column(JSON, default=list, nullable=True)
-
     task = relationship("Tasks", back_populates="assignments")
     account = relationship("SchoolAccountsVerified", back_populates="assignments")
 
-
-
-# *id_gen
+"""Id generator functions"""
 @event.listens_for(FocalAccountsRequest, 'before_insert')
 def generate_focal_request_id(mapper, connection, target):
     if target.user_id is None:
@@ -161,7 +147,6 @@ def generate_focal_request_id(mapper, connection, target):
                 next_number = 1
         else: 
             next_number = 1
-
         target.user_id = f"FREQ-{next_number:04d}"
 
 @event.listens_for(SchoolAccountsRequest, 'before_insert')
@@ -180,7 +165,6 @@ def generate_school_request_id(mapper, connection, target):
                 next_number = 1
         else: 
             next_number = 1
-
         target.user_id = f"SREQ-{next_number:04d}"
 
 @event.listens_for(FocalAccountsVerified, 'before_insert')
@@ -199,7 +183,6 @@ def generate_focal_verified_id(mapper, connection, target):
                 next_number = 1
         else: 
             next_number = 1
-
         target.user_id = f"FOCAL-{next_number:04d}"
 
 @event.listens_for(SchoolAccountsVerified, 'before_insert')
@@ -218,5 +201,4 @@ def generate_school_verified_id(mapper, connection, target):
                 next_number = 1
         else: 
             next_number = 1
-
         target.user_id = f"SCHOOL-{next_number:04d}"

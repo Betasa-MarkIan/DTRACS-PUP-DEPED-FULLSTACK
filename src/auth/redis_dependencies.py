@@ -1,9 +1,9 @@
 from fastapi import Depends
 import redis.asyncio as redis
-import time
 from fastapi import HTTPException, status, Request
 from database.redis import get_redis_client
 from typing import Any
+import time
 import math
 
 
@@ -147,7 +147,6 @@ async def sliding_window_rate_limit(
                 "window_seconds": window_seconds
             }
         )
-
     return {
         "allowed": result["allowed"],
         "current_requests": result["current_requests"],

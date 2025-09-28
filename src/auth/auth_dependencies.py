@@ -1,12 +1,18 @@
-from fastapi import Depends, HTTPException, status, Request
+from fastapi import Depends, HTTPException, status, Request, Response
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from database.database import get_db
 from models import db_models
+from config.config import settings
+from repository import focal_repositories
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from auth import auth_security
+from auth import auth_security, token_schema
+from exceptions import ExceptionDict
+from datetime import datetime, timedelta
+import secrets
 
 security = HTTPBearer()
+exc = ExceptionDict()
 
 async def get_current_user(
     request: Request,
@@ -22,7 +28,6 @@ async def get_current_user(
             detail="Access token missing from headers",
             headers={"WWW-Authenticate": "Bearer"},
         )
-
     payload = auth_security.verify_access_token(access_token)
     if not payload:
         raise HTTPException(
@@ -30,33 +35,110 @@ async def get_current_user(
             detail="Access token not valid",
             headers={"WWW-Authenticate": "Bearer"},
         )
-
     user_id = payload.get("sub")
-
     if "SCHOOL" in user_id:
         result = await db.execute(
             select(db_models.SchoolAccountsVerified)
             .where(db_models.SchoolAccountsVerified.user_id == user_id)
         )
-    
     elif "FOCAL" in user_id:
         result = await db.execute(
             select(db_models.FocalAccountsVerified)
             .where(db_models.FocalAccountsVerified.user_id == user_id)
         )
-
-    else:
+    elif "ADMIN" in user_id:
         result = await db.execute(
             select(db_models.AdminAccount)
             .where(db_models.AdminAccount.user_id == user_id)
         )
-
     user = result.scalar_one_or_none()
-
     if user is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="User not found",
-        )
-    
+        raise exc.get("AccountNotFound")
     return user
+
+
+async def create_tokens(
+    db: AsyncSession, 
+    request: Request, 
+    response: Response, 
+    user_id: str
+):
+    access_token = auth_security.create_access_token(data={"sub": user_id})
+    session_id = secrets.token_urlsafe(48)
+    refresh_token = auth_security.create_refresh_token(data={
+        "sub": user_id,
+        "session_id": session_id
+    })
+
+    hashed_refresh_token = auth_security.hash_password(refresh_token)
+    expire = datetime.now() + timedelta(seconds=settings.REFRESH_TOKEN_EXPIRE)
+
+    db_refresh_token = db_models.UserTokens(
+        ip_address=request.state.real_ip,
+        user_id=user_id,
+        token=hashed_refresh_token,
+        expires_at=expire,
+        session_id=session_id
+    )
+
+    await focal_repositories.push_specific(db, db_refresh_token)
+
+    # response.set_cookie(
+    #     key="access_token",
+    #     value=access_token,
+    #     #httponly=True,
+    #     httponly=False,
+    #     max_age=settings.ACCESS_TOKEN_EXPIRE,
+    #     #secure=True,  # True in production (HTTPS only)
+    #     secure=False,  # True in production (HTTPS only)
+    #     #samesite="lax",
+    #     samesite="lax",
+    #     path="/",
+    #     domain="localhost" 
+    # )
+    # response.set_cookie(
+    #     key="refresh_token",
+    #     value=refresh_token,
+    #     #httponly=True,
+    #     httponly=False,
+    #     max_age=settings.REFRESH_TOKEN_EXPIRE,
+    #     #secure=True,
+    #     secure=False,
+    #     #samesite="lax",
+    #     samesite="lax",
+    #     path="/auth" ,
+    #     domain="localhost" 
+    # )
+
+    response.set_cookie(
+        key="access_token",
+        value=access_token,
+        httponly=True,
+        max_age=settings.ACCESS_TOKEN_EXPIRE,
+        secure=True,              # MUST be true on https
+        samesite="None",          # required for cross-site cookies
+        path="/",
+    )
+
+    response.set_cookie(
+        key="refresh_token",
+        value=refresh_token,
+        httponly=True,
+        max_age=settings.REFRESH_TOKEN_EXPIRE,
+        secure=True,              # MUST be true on https
+        samesite="None",          # required for cross-site cookies
+        path="/auth",
+    )
+
+    token_response = token_schema.TokenData(
+        access_token=access_token,
+        token_type="Bearer",
+        user_id=user_id
+    )
+    return token_response
+    # return {
+    #     "access_token":access_token,
+    #     "refresh_token":refresh_token,
+    #     "token_type":"Bearer",
+    #     "user_id":user_id
+    # }

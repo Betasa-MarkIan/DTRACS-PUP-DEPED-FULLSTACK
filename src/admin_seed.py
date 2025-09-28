@@ -15,17 +15,18 @@ async def seed_admin():
 
     async with AsyncSessionLocal() as session:
         try:
-            from dtracs.src.models.db_models import AdminAccount, SchoolAccountsRequest, SchoolAccountsVerified, FocalAccountsRequest, FocalAccountsVerified
+            from models.db_models import AdminAccount, SchoolAccountsRequest, SchoolAccountsVerified, FocalAccountsRequest, FocalAccountsVerified
 
             q = union_all(
-                (select(AdminAccount.email).where(AdminAccount.email == admin_email)) 
-                (select(SchoolAccountsRequest.email).where(AdminAccount.email == admin_email)) 
-                (select(SchoolAccountsVerified.email).where(AdminAccount.email == admin_email)) 
-                (select(FocalAccountsRequest.email).where(AdminAccount.email == admin_email)) 
-                (select(FocalAccountsVerified.email).where(AdminAccount.email == admin_email)) 
+                (select(AdminAccount.email).where(AdminAccount.email == admin_email)),
+                (select(SchoolAccountsRequest.email).where(AdminAccount.email == admin_email)),
+                (select(SchoolAccountsVerified.email).where(AdminAccount.email == admin_email)),
+                (select(FocalAccountsRequest.email).where(AdminAccount.email == admin_email)),
+                (select(FocalAccountsVerified.email).where(AdminAccount.email == admin_email)),
             ).alias("email_check")
 
-            existing = q.scalar_one_or_none()
+            result = await session.execute(select(q))
+            existing = result.scalar_one_or_none()
             if existing:
                 print("Admin already exists:", existing.email, existing.user_id)
                 return
@@ -40,7 +41,6 @@ async def seed_admin():
                 email=admin_email,
                 password=hashed_admin_pass
             )
-
             session.add(admin)
             await session.commit()
             await session.refresh(admin)

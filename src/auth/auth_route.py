@@ -5,38 +5,67 @@ from sqlalchemy.future import select
 from exceptions import ExceptionDict
 from database.database import get_db
 from database.redis import get_redis_client
-from repository import focal_repositories
 from models import db_models
 from schema import db_response
-from config.config import settings
-from datetime import datetime, timedelta
-from auth import auth_security, token_schema, redis_dependencies
-from auth.auth_dependencies import get_current_user
+from auth import auth_security, token_schema, redis_dependencies, auth_dependencies
 from typing import Any
-import secrets
+from datetime import datetime
 import logging
 
+from sqlalchemy import select, union_all
+from models.db_models import AdminAccount, SchoolAccountsVerified, FocalAccountsVerified
+from database.database import AsyncSessionLocal
 
-router = APIRouter(prefix="/auth", tags=["authentication"])
 exc = ExceptionDict()
 security = HTTPBearer()
 logger = logging.getLogger(__name__)
+router = APIRouter(prefix="/auth", tags=["authentication"])
 
+@router.get("/proxy/get/current/user", status_code=status.HTTP_200_OK)
+async def get_user(
+    user_id: str
+):
+    """Proxy route for retrieving  user information"""
+    async with AsyncSessionLocal() as session:
+        try:
+            get_user = union_all(
+                (select(AdminAccount.user_id).where(AdminAccount.user_id == user_id)),
+                (select(SchoolAccountsVerified.user_id).where(SchoolAccountsVerified.user_id == user_id)),
+                (select(FocalAccountsVerified.user_id).where(FocalAccountsVerified.user_id == user_id)),
+            ).alias("get_user")
+            
+            result = await session.execute(select(get_user))
+            user_id = result.scalar_one_or_none()
+        except Exception as e:
+            raise exc.get("DatabaseError", error=e)
+
+    if "SCHOOL" in user_id:
+        result = await session.execute(select(SchoolAccountsVerified).where(SchoolAccountsVerified.user_id == user_id))
+        user = result.scalar_one_or_none()
+        json_response = db_response.SchoolResponse.model_validate(user)
+    elif "FOCAL" in user_id:
+        result = await session.execute(select(FocalAccountsVerified).where(FocalAccountsVerified.user_id == user_id))
+        user = result.scalar_one_or_none()
+        json_response = db_response.FocalResponse.model_validate(user)
+    elif "ADMIN" in user_id:
+        result = await session.execute(select(AdminAccount).where(AdminAccount.user_id == user_id))
+        user = result.scalar_one_or_none()
+        json_response = db_response.AdminResponse.model_validate(user)
+
+    await session.close()
+    return json_response
 
 @router.get("/get/current/user", status_code=status.HTTP_200_OK)
 async def get_user(
-    current_user: Any = Depends(get_current_user),
+    current_user: Any = Depends(auth_dependencies.get_current_user),
 ):
-    
     if "SCHOOL" in current_user.user_id:
         json_response = db_response.SchoolResponse.model_validate(current_user)
     elif "FOCAL" in current_user.user_id:
         json_response = db_response.FocalResponse.model_validate(current_user)
-    else:
+    elif "ADMIN" in current_user.user_id:
         json_response = db_response.AdminResponse.model_validate(current_user)
-    
     return json_response
-    
 
 @router.post("/refresh", status_code=status.HTTP_200_OK)
 async def refresh_access_token(
@@ -44,19 +73,17 @@ async def refresh_access_token(
     response: Response,
     credentials: HTTPAuthorizationCredentials = Depends(security),
     db: AsyncSession = Depends(get_db)
-#) -> token_schema.TokenData:
-) -> dict:
+) -> token_schema.TokenData:
     
     refresh_token = request.cookies.get("refresh_token")
     if not refresh_token:
         refresh_token = credentials.credentials
     if not refresh_token:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Refresh token missing from headers")
-    
     payload = auth_security.verify_refresh_token(refresh_token)
     if not payload:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token")
-
+    
     user_id = payload.get("sub")
     session_id = payload.get("session_id")
     result = await db.execute(
@@ -68,7 +95,6 @@ async def refresh_access_token(
     stored_token = result.scalar_one_or_none()
     if stored_token is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Refresh token revoked")
-    
     if stored_token.expires_at < datetime.now():
         await db.delete(stored_token)
         await db.commit()
@@ -76,14 +102,13 @@ async def refresh_access_token(
             status_code=status.HTTP_401_UNAUTHORIZED, 
             detail="Refresh token expired"
         )
-
-    new_tokens = await create_tokens(db, request, response, user_id)
+    
+    new_tokens = await auth_dependencies.create_tokens(db, request, response, user_id)
     if auth_security.verify_password(refresh_token, stored_token.token):
         await db.delete(stored_token)
         await db.commit()
-    
-    return new_tokens
 
+    return new_tokens
 
 @router.post("/login", status_code=status.HTTP_200_OK)
 async def login (
@@ -92,29 +117,25 @@ async def login (
     login_data: token_schema.Login,
     db: AsyncSession = Depends(get_db),
     rate_limit: dict = Depends(redis_dependencies.sliding_window_rate_limit)
-#) -> token_schema.TokenData:
-) -> dict:
+) -> token_schema.TokenData:
 
     result = await db.execute(
         select(db_models.SchoolAccountsVerified)
         .where(db_models.SchoolAccountsVerified.email == login_data.email)
     )
     account = result.scalar_one_or_none()
-    
     if account is None:
         result = await db.execute(
         select(db_models.FocalAccountsVerified)
         .where(db_models.FocalAccountsVerified.email == login_data.email)
         )
         account = result.scalar_one_or_none()
-    
     if account is None:
         result = await db.execute(
         select(db_models.AdminAccount)
         .where(db_models.AdminAccount.email == login_data.email)
         )
         account = result.scalar_one_or_none()
-
     if account is None or not auth_security.verify_password(login_data.password, account.password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -131,25 +152,20 @@ async def login (
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Key not in cache memory",
         )
-
-    generate_tokens = await create_tokens(db, request, response, account.user_id)
-
+    generate_tokens = await auth_dependencies.create_tokens(db, request, response, account.user_id)
     return generate_tokens
-
 
 @router.post("/logout", status_code=status.HTTP_200_OK)
 async def logout(
     request: Request,
     response: Response,
     credentials: HTTPAuthorizationCredentials = Depends(security),
-    current_user: Any = Depends(get_current_user),
+    current_user: Any = Depends(auth_dependencies.get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-
-    # refresh_token = request.cookies.get("refresh_token")
-    # if not refresh_token:
-    #     
-    refresh_token = credentials.credentials
+    refresh_token = request.cookies.get("refresh_token")
+    if not refresh_token:
+        refresh_token = credentials.credentials
     if not refresh_token:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Refresh token missing")
     
@@ -159,10 +175,10 @@ async def logout(
         .where(db_models.UserTokens.user_id == current_user.user_id)
         .where(db_models.UserTokens.session_id == decoded_refresh_token["session_id"])
     )
+
     user = result.scalar_one_or_none()
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Refresh token revoked")
-    
     if not auth_security.verify_password(refresh_token, user.token):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Refresh token database mismatch")
     
@@ -173,90 +189,3 @@ async def logout(
     response.delete_cookie("refresh_token", path="/auth/refresh")
 
     return {"message": "Successfully logged out"}
-
-
-async def create_tokens(
-    db: AsyncSession, 
-    request: Request, 
-    response: Response, 
-    user_id: str
-):
-    access_token = auth_security.create_access_token(data={"sub": user_id})
-    session_id = secrets.token_urlsafe(48)
-    refresh_token = auth_security.create_refresh_token(data={
-        "sub": user_id,
-        "session_id": session_id
-    })
-
-    hashed_refresh_token = auth_security.hash_password(refresh_token)
-    expire = datetime.now() + timedelta(seconds=settings.REFRESH_TOKEN_EXPIRE)
-
-    db_refresh_token = db_models.UserTokens(
-        ip_address=request.state.real_ip,
-        user_id=user_id,
-        token=hashed_refresh_token,
-        expires_at=expire,
-        session_id=session_id
-    )
-
-    await focal_repositories.push_specific(db, db_refresh_token)
-
-    # response.set_cookie(
-    #     key="access_token",
-    #     value=access_token,
-    #     #httponly=True,
-    #     httponly=False,
-    #     max_age=settings.ACCESS_TOKEN_EXPIRE,
-    #     #secure=True,  # True in production (HTTPS only)
-    #     secure=False,  # True in production (HTTPS only)
-    #     #samesite="lax",
-    #     samesite="lax",
-    #     path="/",
-    #     domain="localhost" 
-    # )
-    # response.set_cookie(
-    #     key="refresh_token",
-    #     value=refresh_token,
-    #     #httponly=True,
-    #     httponly=False,
-    #     max_age=settings.REFRESH_TOKEN_EXPIRE,
-    #     #secure=True,
-    #     secure=False,
-    #     #samesite="lax",
-    #     samesite="lax",
-    #     path="/auth" ,
-    #     domain="localhost" 
-    # )
-
-    response.set_cookie(
-        key="access_token",
-        value=access_token,
-        httponly=True,
-        max_age=settings.ACCESS_TOKEN_EXPIRE,
-        secure=True,              # MUST be true on https
-        samesite="None",          # required for cross-site cookies
-        path="/",
-    )
-
-    response.set_cookie(
-        key="refresh_token",
-        value=refresh_token,
-        httponly=True,
-        max_age=settings.REFRESH_TOKEN_EXPIRE,
-        secure=True,              # MUST be true on https
-        samesite="None",          # required for cross-site cookies
-        path="/auth",
-    )
-
-    # token_response = token_schema.TokenData(
-    #     access_token=access_token,
-    #     token_type="Bearer",
-    #     user_id=user_id
-    # )
-    #return token_response
-    return {
-        "access_token":access_token,
-        "refresh_token":refresh_token,
-        "token_type":"Bearer",
-        "user_id":user_id
-    }

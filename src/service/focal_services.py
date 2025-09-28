@@ -12,13 +12,8 @@ from sqlalchemy.future import select
 exc = ExceptionDict()
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-
-async def create_focal_account_request(
-    db: AsyncSession,
-    focal_account_data: focal_schemas.RegistrationSchema
-):
+async def create_focal_account_request(db: AsyncSession, focal_account_data: focal_schemas.RegistrationSchema):
     hashed_password = pwd_context.hash(focal_account_data.password)
-
     account_data = {
         "user_id": None,
         "last_name": focal_account_data.last_name,
@@ -32,48 +27,34 @@ async def create_focal_account_request(
         "password": hashed_password,
         "registration_date": datetime.now(),
     }
-
     if account_data is None:
         raise exc.get("AccountRegistrationFailed")
     
     email_check = union_all(
         select(db_models.SchoolAccountsRequest.email).where(db_models.SchoolAccountsRequest.email == account_data["email"]),
-
         select(db_models.FocalAccountsRequest.email).where(db_models.FocalAccountsRequest.email == account_data["email"]),
-
         select(db_models.SchoolAccountsVerified.email).where(db_models.SchoolAccountsVerified.email == account_data["email"]),
-
         select(db_models.FocalAccountsVerified.email).where(db_models.FocalAccountsVerified.email == account_data["email"]),
-
         select(db_models.AdminAccount.email).where(db_models.AdminAccount.email == account_data["email"])
-        
     ).alias("email_check")
 
     result = await db.execute(select(email_check))
     account_exist = result.scalar_one_or_none()
-
     if account_exist:
         raise exc.get("AccountDuplication")
-    
     return await focal_repositories.create_focal_account(db, account_data)
 
-
 async def verify_login(db: AsyncSession, login_data: focal_schemas.FocalAccountLoginSchema):
-
     result = await db.execute(
         select(db_models.FocalAccountsVerified)
         .where(db_models.FocalAccountsVerified.email == login_data.email)
     )
     account = result.scalar_one_or_none()
-
     if account is None:
         raise exc.get("AccountNotFound")
-
     if not pwd_context.verify(login_data.password, account.password):
         raise exc.get("InvalidCredentials")
-
     return account
-
 
 async def update_focal_account(
     db: AsyncSession,
@@ -82,27 +63,21 @@ async def update_focal_account(
 ):
     updates_dict = updated_data.model_dump(exclude_unset=True)
     updates = await helpers.updating_account(updates_dict)
-
     allowed_fields_for_update = {"last_name", "first_name", "middle_name", "email", "contact_number"}
-
     valid_updates = {
         field: value
         for field, value in updates.items()
         if field in allowed_fields_for_update and value is not None
     }
-
     account = await helpers.get_focal_verified_by_id(db, user_id)
     if account is None:
         raise exc.get("AccountNotFound")
-    
     for field, value in valid_updates.items():
         setattr(account, field, value)
 
     middle_part = f" {account.middle_name}" if account.middle_name else ""
     account.full_name = f"{account.last_name}, {account.first_name}{middle_part}".strip()
-
     return await focal_repositories.push_commit(db, account)
-
 
 async def update_avatar_focal_verified(
     db: AsyncSession, 
@@ -111,23 +86,18 @@ async def update_avatar_focal_verified(
 ):
     account = await helpers.get_focal_verified_by_id(db, user_id)
     account.avatar = new_avatar
-
     return await focal_repositories.push_commit(db, account)
 
 
 async def get_school_verified_by_school_name(db: AsyncSession, school_name: str):
-
     result = await db.execute(
         select(db_models.SchoolAccountsVerified)
         .where(db_models.SchoolAccountsVerified.school_name == school_name)
     )
     accounts = result.scalars().all()
-
     if not accounts:
         raise exc.get("AccountNotFound")
-
     return accounts
-
 
 async def get_focal_account_by_section(db: AsyncSession, section_designation: str):
     result = await db.execute(
@@ -135,17 +105,13 @@ async def get_focal_account_by_section(db: AsyncSession, section_designation: st
         .where(db_models.FocalAccountsVerified.section_designation == section_designation)
     )
     accounts = result.scalars().all()
-
     if not accounts:
         raise exc.get("AccountNotFound")
-
     return accounts
-
 
 async def all_assignment_display(db: AsyncSession, task_id: str):
     specific_task = await focal_repositories.get_task_by_id(db, task_id)
     school_accounts = await helpers.get_ids_in_assignment(db, specific_task)
-
     displays = []
     for assignment in specific_task.assignments:
         for account in school_accounts:
@@ -161,14 +127,11 @@ async def all_assignment_display(db: AsyncSession, task_id: str):
                 remarks=assignment.remarks,
                 links=assignment.links
                 )
-
                 displays.append(display)
 
     if not displays:
         raise exc.get("RetrievingTasksFailed")
-    
     return displays
-
 
 async def get_schools_assigned(db: AsyncSession, schools_names: list):
     result = await db.execute(
@@ -176,15 +139,12 @@ async def get_schools_assigned(db: AsyncSession, schools_names: list):
         .where(db_models.SchoolAccountsVerified.school_name.in_(schools_names))
     )
     school_ids = result.scalars().all()
-
     if not school_ids:
         raise exc.get("AccountNotFound")
     
     accounts_assigned_from_school = []
     accounts_assigned_from_school.extend(school_ids)
-
     return accounts_assigned_from_school
-
 
 async def accounts_assigned_status(db: AsyncSession, school_ids: list):
     result = await db.execute(
@@ -192,7 +152,6 @@ async def accounts_assigned_status(db: AsyncSession, school_ids: list):
         .where(db_models.SchoolAccountsVerified.user_id.in_(school_ids))
     )
     accounts = result.scalars().all()
-
     if not accounts:
         raise exc.get("TaskCreationFailed")
 
@@ -206,11 +165,8 @@ async def accounts_assigned_status(db: AsyncSession, school_ids: list):
             "remarks": "PENDING",
             "links": None
         }
-
         accounts_assigned_list.append(account_status)
-
     return accounts_assigned_list
-
 
 async def create_new_task(
     db: AsyncSession,
@@ -219,7 +175,6 @@ async def create_new_task(
 ):
     creator_focal = await helpers.get_focal_verified_by_id(db, task_data.creator_id)
     generated_task_id = await helpers.generate_task_id(db)
-    
     assignments = []
     for account in accounts_assigned_status:
         assignment = db_models.TaskAssignment(
@@ -246,9 +201,7 @@ async def create_new_task(
         links=task_data.links,
         assignments = assignments
     )
-
     return await focal_repositories.push_specific(db, task)
-
 
 async def update_task(
     db: AsyncSession, 
@@ -273,7 +226,6 @@ async def update_task(
                 db_models.TaskAssignment.school_id.in_(remove_from_list)
             )
     )
-        
     modified_obj = []
     if add_to_list:
         assignment_to_add = await accounts_assigned_status(db, add_to_list)
@@ -299,7 +251,6 @@ async def update_task(
     
     modified_obj.append(task)
     await focal_repositories.push_commit_multiple(db, modified_obj)
-
     return task
 
 
