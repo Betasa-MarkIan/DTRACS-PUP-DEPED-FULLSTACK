@@ -4284,3 +4284,28 @@ RuntimeError: Event loop is closed
 2025-09-28 16:37:24,995 - apscheduler.scheduler - INFO - [base.py:245] - Scheduler has been shut down
 2025-09-28 16:37:29,381 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
 2025-09-28 16:37:35,810 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-28 16:46:50,416 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-28 16:46:51,578 - apscheduler.scheduler - INFO - [base.py:507] - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-09-28 16:46:52,059 - apscheduler.scheduler - INFO - [base.py:1090] - Added job "cleanup_expired_tokens" to job store "default"
+2025-09-28 16:46:52,059 - apscheduler.scheduler - INFO - [base.py:214] - Scheduler started
+2025-09-28 16:56:51,584 - apscheduler.executors.default - INFO - [base.py:179] - Running job "cleanup_expired_tokens (trigger: interval[0:10:00], next run at: 2025-09-28 17:06:51 +08)" (scheduled at 2025-09-28 16:56:51.578433+08:00)
+2025-09-28 16:56:51,610 - auth.auth_security - INFO - [auth_security.py:99] - 24 hour routine token clean up complete. Cleaned up 0 expired tokens
+2025-09-28 16:56:51,611 - apscheduler.executors.default - INFO - [base.py:203] - Job "cleanup_expired_tokens (trigger: interval[0:10:00], next run at: 2025-09-28 17:06:51 +08)" executed successfully
+2025-09-28 17:06:51,592 - apscheduler.executors.default - INFO - [base.py:179] - Running job "cleanup_expired_tokens (trigger: interval[0:10:00], next run at: 2025-09-28 17:16:51 +08)" (scheduled at 2025-09-28 17:06:51.578433+08:00)
+2025-09-28 17:06:51,606 - auth.auth_security - INFO - [auth_security.py:99] - 24 hour routine token clean up complete. Cleaned up 0 expired tokens
+2025-09-28 17:06:51,607 - apscheduler.executors.default - INFO - [base.py:203] - Job "cleanup_expired_tokens (trigger: interval[0:10:00], next run at: 2025-09-28 17:16:51 +08)" executed successfully
+2025-09-28 17:16:51,589 - apscheduler.executors.default - INFO - [base.py:179] - Running job "cleanup_expired_tokens (trigger: interval[0:10:00], next run at: 2025-09-28 17:26:51 +08)" (scheduled at 2025-09-28 17:16:51.578433+08:00)
+2025-09-28 17:16:51,597 - auth.auth_security - INFO - [auth_security.py:99] - 24 hour routine token clean up complete. Cleaned up 0 expired tokens
+2025-09-28 17:16:51,598 - apscheduler.executors.default - INFO - [base.py:203] - Job "cleanup_expired_tokens (trigger: interval[0:10:00], next run at: 2025-09-28 17:26:51 +08)" executed successfully
+2025-09-28 17:26:51,581 - apscheduler.executors.default - INFO - [base.py:179] - Running job "cleanup_expired_tokens (trigger: interval[0:10:00], next run at: 2025-09-28 17:36:51 +08)" (scheduled at 2025-09-28 17:26:51.578433+08:00)
+2025-09-28 17:26:51,587 - auth.auth_security - INFO - [auth_security.py:99] - 24 hour routine token clean up complete. Cleaned up 0 expired tokens
+2025-09-28 17:26:51,587 - apscheduler.executors.default - INFO - [base.py:203] - Job "cleanup_expired_tokens (trigger: interval[0:10:00], next run at: 2025-09-28 17:36:51 +08)" executed successfully
+2025-09-28 17:36:51,584 - apscheduler.executors.default - INFO - [base.py:179] - Running job "cleanup_expired_tokens (trigger: interval[0:10:00], next run at: 2025-09-28 17:46:51 +08)" (scheduled at 2025-09-28 17:36:51.578433+08:00)
+2025-09-28 17:36:51,586 - auth.auth_security - INFO - [auth_security.py:99] - 24 hour routine token clean up complete. Cleaned up 0 expired tokens
+2025-09-28 17:36:51,587 - apscheduler.executors.default - INFO - [base.py:203] - Job "cleanup_expired_tokens (trigger: interval[0:10:00], next run at: 2025-09-28 17:46:51 +08)" executed successfully
+2025-09-28 17:46:51,588 - apscheduler.executors.default - INFO - [base.py:179] - Running job "cleanup_expired_tokens (trigger: interval[0:10:00], next run at: 2025-09-28 17:56:51 +08)" (scheduled at 2025-09-28 17:46:51.578433+08:00)
+2025-09-28 17:46:51,592 - auth.auth_security - INFO - [auth_security.py:99] - 24 hour routine token clean up complete. Cleaned up 0 expired tokens
+2025-09-28 17:46:51,593 - apscheduler.executors.default - INFO - [base.py:203] - Job "cleanup_expired_tokens (trigger: interval[0:10:00], next run at: 2025-09-28 17:56:51 +08)" executed successfully
+2025-09-28 17:56:51,579 - apscheduler.executors.default - INFO - [base.py:179] - Running job "cleanup_expired_tokens (trigger: interval[0:10:00], next run at: 2025-09-28 18:06:51 +08)" (scheduled at 2025-09-28 17:56:51.578433+08:00)
+2025-09-28 17:56:51,590 - auth.auth_security - INFO - [auth_security.py:99] - 24 hour routine token clean up complete. Cleaned up 0 expired tokens
+2025-09-28 17:56:51,596 - apscheduler.executors.default - INFO - [base.py:203] - Job "cleanup_expired_tokens (trigger: interval[0:10:00], next run at: 2025-09-28 18:06:51 +08)" executed successfully

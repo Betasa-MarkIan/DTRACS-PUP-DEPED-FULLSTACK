@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     """Redis credentials env"""
     REDIS_HOST: str = "localhost"
     REDIS_PORT: int = 6379
-    REDIS_URL: str
+    # REDIS_URL: str
 
     @property
     def DATABASE_URL(self) -> str:
