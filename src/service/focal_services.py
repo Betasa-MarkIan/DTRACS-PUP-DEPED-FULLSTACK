@@ -79,15 +79,10 @@ async def update_focal_account(
     account.full_name = f"{account.last_name}, {account.first_name}{middle_part}".strip()
     return await focal_repositories.push_commit(db, account)
 
-async def update_avatar_focal_verified(
-    db: AsyncSession, 
-    user_id: str, 
-    new_avatar
-):
+async def update_avatar_focal_verified(db: AsyncSession, user_id: str, new_avatar: str):
     account = await helpers.get_focal_verified_by_id(db, user_id)
     account.avatar = new_avatar
     return await focal_repositories.push_commit(db, account)
-
 
 async def get_school_verified_by_school_name(db: AsyncSession, school_name: str):
     result = await db.execute(

@@ -12,7 +12,6 @@ from typing import Any
 from datetime import datetime
 from sqlalchemy import select, union_all
 from models.db_models import AdminAccount, SchoolAccountsVerified, FocalAccountsVerified
-from database.database import AsyncSessionLocal
 import logging
 
 exc = ExceptionDict()
@@ -21,43 +20,37 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/auth", tags=["authentication"])
 
 @router.get("/proxy/get/current/user", status_code=status.HTTP_200_OK)
-async def get_user(
-    user_id: str
-):
+async def get_user(user_id: str, db: AsyncSession = Depends(get_db)):
     """Proxy route for retrieving  user information"""
-    async with AsyncSessionLocal() as session:
-        try:
-            get_user = union_all(
-                (select(AdminAccount.user_id).where(AdminAccount.user_id == user_id)),
-                (select(SchoolAccountsVerified.user_id).where(SchoolAccountsVerified.user_id == user_id)),
-                (select(FocalAccountsVerified.user_id).where(FocalAccountsVerified.user_id == user_id)),
-            ).alias("get_user")
-            
-            result = await session.execute(select(get_user))
-            user_id = result.scalar_one_or_none()
-        except Exception as e:
-            raise exc.get("DatabaseError", error=e)
+    try:
+        get_user = union_all(
+            (select(AdminAccount.user_id).where(AdminAccount.user_id == user_id)),
+            (select(SchoolAccountsVerified.user_id).where(SchoolAccountsVerified.user_id == user_id)),
+            (select(FocalAccountsVerified.user_id).where(FocalAccountsVerified.user_id == user_id)),
+        ).alias("get_user")
+        
+        result = await db.execute(select(get_user))
+        user_id = result.scalar_one_or_none()
+    except Exception as e:
+        raise exc.get("DatabaseError", error=e)
 
     if "SCHOOL" in user_id:
-        result = await session.execute(select(SchoolAccountsVerified).where(SchoolAccountsVerified.user_id == user_id))
+        result = await db.execute(select(SchoolAccountsVerified).where(SchoolAccountsVerified.user_id == user_id))
         user = result.scalar_one_or_none()
         json_response = db_response.SchoolResponse.model_validate(user)
     elif "FOCAL" in user_id:
-        result = await session.execute(select(FocalAccountsVerified).where(FocalAccountsVerified.user_id == user_id))
+        result = await db.execute(select(FocalAccountsVerified).where(FocalAccountsVerified.user_id == user_id))
         user = result.scalar_one_or_none()
         json_response = db_response.FocalResponse.model_validate(user)
     elif "ADMIN" in user_id:
-        result = await session.execute(select(AdminAccount).where(AdminAccount.user_id == user_id))
+        result = await db.execute(select(AdminAccount).where(AdminAccount.user_id == user_id))
         user = result.scalar_one_or_none()
         json_response = db_response.AdminResponse.model_validate(user)
 
-    await session.close()
     return json_response
 
 @router.get("/get/current/user", status_code=status.HTTP_200_OK)
-async def get_user(
-    current_user: Any = Depends(auth_dependencies.get_current_user),
-):
+async def get_user(current_user: Any = Depends(auth_dependencies.get_current_user)):
     if "SCHOOL" in current_user.user_id:
         json_response = db_response.SchoolResponse.model_validate(current_user)
     elif "FOCAL" in current_user.user_id:
@@ -101,66 +94,12 @@ async def refresh_access_token(
             status_code=status.HTTP_401_UNAUTHORIZED, 
             detail="Refresh token expired"
         )
-    
     new_tokens = await auth_dependencies.create_tokens(db, request, response, user_id)
     if auth_security.verify_password(refresh_token, stored_token.token):
         await db.delete(stored_token)
         await db.commit()
 
     return new_tokens
-
-# @router.post("/login", status_code=status.HTTP_200_OK)
-# async def login (
-#     request: Request,
-#     response: Response,
-#     login_data: token_schema.Login,
-#     db: AsyncSession = Depends(get_db),
-#     #rate_limit: dict = Depends(redis_dependencies.sliding_window_rate_limit)
-#     rate_limiter: auth_dependencies.SlidingWindowRateLimiter = Depends(auth_dependencies.get_rate_limiter),
-#     blacklist: auth_dependencies.BlacklistedUsers = Depends(auth_dependencies.get_blacklist_status)
-# ) -> token_schema.TokenData:
-# # TODO: move the creation of cookie in the route
-
-#     rate_limit = await redis_dependencies.sliding_window_rate_limit(request, response, rate_limiter, blacklist)
-#     if rate_limit.get("login_token"):
-#         return rate_limit
-    
-#     result = await db.execute(
-#         select(db_models.SchoolAccountsVerified)
-#         .where(db_models.SchoolAccountsVerified.email == login_data.email)
-#     )
-#     account = result.scalar_one_or_none()
-#     if account is None:
-#         result = await db.execute(
-#         select(db_models.FocalAccountsVerified)
-#         .where(db_models.FocalAccountsVerified.email == login_data.email)
-#         )
-#         account = result.scalar_one_or_none()
-#     if account is None:
-#         result = await db.execute(
-#         select(db_models.AdminAccount)
-#         .where(db_models.AdminAccount.email == login_data.email)
-#         )
-#         account = result.scalar_one_or_none()
-#     if account is None or not auth_security.verify_password(login_data.password, account.password):
-#         raise HTTPException(
-#             status_code=status.HTTP_401_UNAUTHORIZED,
-#             detail="Incorrect email or password",
-#             headers={"WWW-Authenticate": "Bearer"},
-#         )
-    
-#     client_ip = request.state.real_ip
-#     key = f"rate_limit:login:{client_ip}"
-#     try: 
-#         await (await get_redis_client()).delete(key)
-#     except ValueError:
-#         raise HTTPException(
-#             status_code=status.HTTP_404_NOT_FOUND,
-#             detail="Key not in cache memory",
-#         )
-#     generate_tokens = await auth_dependencies.create_tokens(db, request, response, account.user_id)
-#     return generate_tokens
-
 
 @router.post("/login", status_code=status.HTTP_200_OK)
 async def login (
@@ -227,13 +166,10 @@ async def login (
 async def logout(
     request: Request,
     response: Response,
-    credentials: HTTPAuthorizationCredentials = Depends(security),
     current_user: Any = Depends(auth_dependencies.get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
     refresh_token = request.cookies.get("refresh_token")
-    if not refresh_token:
-        refresh_token = credentials.credentials
     if not refresh_token:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Refresh token missing")
     
@@ -252,9 +188,7 @@ async def logout(
     
     await db.delete(user)
     await db.commit()
-
     response.delete_cookie("access_token", path="/")
     response.delete_cookie("login_access_token", path="/")
     response.delete_cookie("refresh_token", path="/auth")
-
     return {"message": "Successfully logged out"}

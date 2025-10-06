@@ -19,27 +19,50 @@ def verify_password(plain_password: str, hash_password: str):
 def hash_password(plain_password: str):
     return pwd_context.hash(plain_password)
 
+def create_login_access_token(data: dict):
+    expire = datetime.now(timezone.utc) + timedelta(seconds=settings.LOGIN_ACCESS_TOKEN_EXPIRE)
+    data_copy = data.copy()
+    to_encode = token_schema.Login_Token_Payload(
+        sub=data_copy["sub"],
+        type="login_access_token",
+        exp=expire.timestamp()
+    )
+    return jwt.encode(
+        to_encode.model_dump(),
+        settings.JWT_ACCESS_SECRET_KEY,
+        settings.JWT_ALGORITHM
+    )
+    
+def create_login_restrict_token(data: dict):
+    data_copy = data.copy()
+    expire = datetime.now(timezone.utc) + timedelta(seconds=data_copy["expire"])
+    to_encode = token_schema.Login_Token_Payload (
+        sub=data_copy["sub"],
+        type="login_restrict_token",
+        exp=expire.timestamp()
+    )
+    return jwt.encode(
+        to_encode.model_dump(),
+        settings.JWT_ACCESS_SECRET_KEY,
+        settings.JWT_ALGORITHM
+    )
+
 def create_access_token(data: dict):
     expire = datetime.now(timezone.utc) + timedelta(seconds=settings.ACCESS_TOKEN_EXPIRE)
-
     data_copy = data.copy()
     to_encode = token_schema.Access_Token_Payload(
         sub=data_copy["sub"],
         type="access",
         exp=expire.timestamp()
     )
-
-    encoded_jwt = jwt.encode(
+    return jwt.encode(
         to_encode.model_dump(),
         settings.JWT_ACCESS_SECRET_KEY,
         settings.JWT_ALGORITHM
     )
 
-    return encoded_jwt
-
 def create_refresh_token(data: dict):
     expire = datetime.now(timezone.utc) + timedelta(seconds=settings.REFRESH_TOKEN_EXPIRE)
-
     data_copy = data.copy()
     to_encode = token_schema.Refresh_Token_Payload(
         sub=data_copy["sub"],
@@ -47,14 +70,11 @@ def create_refresh_token(data: dict):
         type="refresh",
         exp=expire.timestamp()
     )
-
-    encoded_jwt = jwt.encode(
+    return jwt.encode(
         to_encode.model_dump(),
         settings.JWT_REFRESH_SECRET_KEY,
         settings.JWT_ALGORITHM
     )
-
-    return encoded_jwt
 
 def verify_access_token(token: str):
     try: 
@@ -68,7 +88,7 @@ def verify_access_token(token: str):
             return None
         
         return payload
-    
+
     except JWTError:
         return None
     
@@ -88,45 +108,12 @@ def verify_refresh_token(token: str):
     except JWTError:
         return None
 
-def create_login_access_token(data: dict):
-    expire = datetime.now(timezone.utc) + timedelta(seconds=settings.LOGIN_ACCESS_TOKEN_EXPIRE)
-    data_copy = data.copy()
-    to_encode = token_schema.Login_Token_Payload(
-        sub=data_copy["sub"],
-        type="login_access_token",
-        exp=expire.timestamp()
-    )
-
-    encoded_jwt = jwt.encode(
-        to_encode.model_dump(),
-        settings.JWT_ACCESS_SECRET_KEY,
-        settings.JWT_ALGORITHM
-    )
-    return encoded_jwt
-    
-def create_login_restrict_token(data: dict):
-    data_copy = data.copy()
-    expire = datetime.now(timezone.utc) + timedelta(seconds=data_copy["expire"])
-    to_encode = token_schema.Login_Token_Payload (
-        sub=data_copy["sub"],
-        type="login_restrict_token",
-        exp=expire.timestamp()
-    )
-
-    encoded_jwt = jwt.encode(
-        to_encode.model_dump(),
-        settings.JWT_ACCESS_SECRET_KEY,
-        settings.JWT_ALGORITHM
-    )
-    return encoded_jwt
-
 async def cleanup_expired_tokens():
     async with AsyncSessionLocal() as db:
         result = await db.execute(
             delete(db_models.UserTokens)
             .where(db_models.UserTokens.expires_at < datetime.now())
         )
-
         await db.commit()
         logger.info(f"24 hour routine token clean up complete. Cleaned up {result.rowcount} expired tokens")
 

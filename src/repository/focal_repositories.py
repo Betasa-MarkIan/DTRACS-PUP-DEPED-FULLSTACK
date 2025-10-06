@@ -29,7 +29,6 @@ async def push_specific(db: AsyncSession, obj: Any):
     except Exception as e:
         await db.rollback()
         raise exc.get("DatabaseError", error=e)
-
     return obj
 
 async def push_commit(db: AsyncSession, obj: Any):

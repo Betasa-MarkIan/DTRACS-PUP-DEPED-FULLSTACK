@@ -41,7 +41,7 @@ class RealIPAccessFormatter(AccessFormatter):
 async def lifespan(app: FastAPI):
     """Database initialization"""
     async with engine.begin() as conn:
-        #await conn.run_sync(Base.metadata.drop_all)  # Uncomment to reset database
+        #await conn.run_sync(Base.metadata.drop_all)  #! Uncomment to reset database
         await conn.run_sync(Base.metadata.create_all)
     print("✅ Database tables created successfully")
     
@@ -102,14 +102,12 @@ def get_real_client_ip(request: Request) -> str:
     Extract the real client IP address for Railway deployment
     Railway uses X-Forwarded-For header with the client IP as first value
     """
-
     ip_headers = [
         "X-Forwarded-For",
         "X-Real-IP",
         "CF-Connecting-IP",
         "True-Client-IP",
     ]
-
     for header in ip_headers:
         ip = request.headers.get(header)
         if ip:
@@ -126,9 +124,7 @@ def get_real_client_ip(request: Request) -> str:
 @app.middleware("http")
 async def extract_real_ip(request: Request, call_next):
     real_ip = get_real_client_ip(request)
-   
     request.state.real_ip = real_ip
-
     old_client = request.scope.get("client") or (None, None)
     port = old_client[1]
     if real_ip:
@@ -142,7 +138,6 @@ async def extract_real_ip(request: Request, call_next):
 async def whats_my_ip(request: Request):
     client_host = request.client.host if request.client else None
     real_ip = getattr(request.state, "real_ip", None)
-    
     headers_info = {}
     ip_headers = [
         "X-Forwarded-For", 

@@ -1,10 +1,9 @@
 from fastapi import APIRouter, status, Depends, HTTPException, Request, Response
 from schema import school_schemas, db_response
 from models import db_models
-from util import helpers
 from service import school_services, focal_services
 from repository import focal_repositories
-from auth import token_schema, auth_security, auth_dependencies, redis_dependencies
+from auth import token_schema, auth_security, auth_dependencies
 from exceptions import ExceptionDict
 from sqlalchemy.future import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -19,7 +18,6 @@ async def create_school_account_request(school_request: school_schemas.Registrat
     account_request = await school_services.create_school_account_request(db, school_request)
     response = db_response.SchoolResponse.model_validate(account_request)
     return response
-
 
 @router.post("/login", status_code=status.HTTP_200_OK)
 async def login (

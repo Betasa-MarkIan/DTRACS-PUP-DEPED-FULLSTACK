@@ -5,7 +5,6 @@ from database.redis import get_redis_client
 import time
 import math
 
-
 class BlacklistedUsers:
     def __init__(self, redis_client: redis.Redis):
        self.redis = redis_client
@@ -78,7 +77,6 @@ async def get_rate_limiter(redis_client: redis.Redis = Depends(get_redis_client)
 
 async def get_blacklist_status(redis_client: redis.Redis = Depends(get_redis_client)) -> BlacklistedUsers:
     return BlacklistedUsers(redis_client)
-
 
 async def get_rate_info(rate_limit_info: dict):
     time_val = rate_limit_info["retry_after"]

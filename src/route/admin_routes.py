@@ -4,7 +4,7 @@ from schema import admin_schemas, focal_schemas, db_response
 from service import admin_services, focal_services
 from models import db_models
 from database.redis import get_redis_client
-from auth import token_schema, redis_dependencies, auth_security, auth_dependencies
+from auth import token_schema, auth_security, auth_dependencies
 from util import helpers
 from exceptions import ExceptionDict
 from sqlalchemy.ext.asyncio import AsyncSession

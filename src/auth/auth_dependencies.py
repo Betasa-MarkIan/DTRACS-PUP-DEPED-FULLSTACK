@@ -14,14 +14,8 @@ import secrets
 security = HTTPBearer()
 exc = ExceptionDict()
 
-async def get_current_user(
-    request: Request,
-    credentials: HTTPAuthorizationCredentials = Depends(security),
-    db: AsyncSession = Depends(get_db)
-):
+async def get_current_user(request: Request, db: AsyncSession = Depends(get_db)):
     access_token = request.cookies.get("access_token")
-    if not access_token:
-        access_token = credentials.credentials
     if not access_token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -137,11 +131,7 @@ async def create_tokens(
     )
     return token_response
 
-async def create_login_token(
-    response: Response, 
-    identifier: str
-):
-    #identifies will be ip 
+async def create_login_token(response: Response,  identifier: str):
     login_token = auth_security.create_login_access_token({"sub": identifier})
     expire = datetime.now() + timedelta(seconds=settings.LOGIN_ACCESS_TOKEN_EXPIRE)
 
@@ -161,14 +151,8 @@ async def create_login_token(
     )
 
 
-async def create_login_restrict_token(
-    response: Response, 
-    identifier: str,
-    expire: int
-):
-    #identifies will be ip 
+async def create_login_restrict_token(response: Response,  identifier: str, expire: int):
     login_restrict_token = auth_security.create_login_restrict_token({"sub": identifier, "expire": expire})
-
     response.set_cookie(
         key="login_restrict_token",
         value=login_restrict_token,

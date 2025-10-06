@@ -3,7 +3,7 @@ from repository import focal_repositories
 from schema import focal_schemas, db_response
 from service import focal_services
 from models import db_models
-from auth import auth_dependencies, token_schema, redis_dependencies, auth_security
+from auth import auth_dependencies, token_schema, auth_security
 from util import helpers
 from exceptions import ExceptionDict
 from sqlalchemy.future import select
