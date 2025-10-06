@@ -204,10 +204,8 @@ for exc_name in [
     "TaskCreationFailed",
 ]:
     app.add_exception_handler(exc.get_class(exc_name), exc_handler)
-    
 app.add_exception_handler(HTTPException, exc_handler)
 app.add_exception_handler(Exception, exc_handler)
-
 
 def main():
     """Start the application in production mode"""
