@@ -115,8 +115,8 @@ async def create_tokens(
         value=access_token,
         httponly=True,
         max_age=settings.ACCESS_TOKEN_EXPIRE,
-        secure=True,              # MUST be true on https
-        samesite="None",          # required for cross-site cookies
+        secure=False,              # MUST be true on https
+        samesite="Lax",          # required for cross-site cookies
         path="/",
     )
 
@@ -125,8 +125,8 @@ async def create_tokens(
         value=refresh_token,
         httponly=True,
         max_age=settings.REFRESH_TOKEN_EXPIRE,
-        secure=True,              # MUST be true on https
-        samesite="None",          # required for cross-site cookies
+        secure=False,              # MUST be true on https
+        samesite="Lax",          # required for cross-site cookies
         path="/auth",
     )
 
@@ -136,9 +136,51 @@ async def create_tokens(
         user_id=user_id
     )
     return token_response
-    # return {
-    #     "access_token":access_token,
-    #     "refresh_token":refresh_token,
-    #     "token_type":"Bearer",
-    #     "user_id":user_id
-    # }
+
+async def create_login_token(
+    response: Response, 
+    identifier: str
+):
+    #identifies will be ip 
+    login_token = auth_security.create_login_access_token({"sub": identifier})
+    expire = datetime.now() + timedelta(seconds=settings.LOGIN_ACCESS_TOKEN_EXPIRE)
+
+    response.set_cookie(
+        key="login_access_token",
+        value=login_token,
+        httponly=True,
+        max_age=expire,
+        secure=False,              # MUST be true on https
+        samesite="Lax",          # required for cross-site cookies
+        path="/",
+    )
+    return token_schema.LoginTokenData(
+        login_token=login_token,
+        token_type="Bearer",
+        identifier=identifier
+    )
+
+
+async def create_login_restrict_token(
+    response: Response, 
+    identifier: str,
+    expire: int
+):
+    #identifies will be ip 
+    login_restrict_token = auth_security.create_login_restrict_token({"sub": identifier, "expire": expire})
+
+    response.set_cookie(
+        key="login_restrict_token",
+        value=login_restrict_token,
+        httponly=True,
+        max_age=expire,
+        secure=False,              # MUST be true on https
+        samesite="Lax",          # required for cross-site cookies
+        path="/",
+    )
+    return token_schema.LoginTokenData(
+        login_token=login_restrict_token,
+        token_type="Bearer",
+        identifier=identifier
+    )
+

@@ -10,11 +10,10 @@ from schema import db_response
 from auth import auth_security, token_schema, redis_dependencies, auth_dependencies
 from typing import Any
 from datetime import datetime
-import logging
-
 from sqlalchemy import select, union_all
 from models.db_models import AdminAccount, SchoolAccountsVerified, FocalAccountsVerified
 from database.database import AsyncSessionLocal
+import logging
 
 exc = ExceptionDict()
 security = HTTPBearer()
@@ -110,15 +109,83 @@ async def refresh_access_token(
 
     return new_tokens
 
+# @router.post("/login", status_code=status.HTTP_200_OK)
+# async def login (
+#     request: Request,
+#     response: Response,
+#     login_data: token_schema.Login,
+#     db: AsyncSession = Depends(get_db),
+#     #rate_limit: dict = Depends(redis_dependencies.sliding_window_rate_limit)
+#     rate_limiter: auth_dependencies.SlidingWindowRateLimiter = Depends(auth_dependencies.get_rate_limiter),
+#     blacklist: auth_dependencies.BlacklistedUsers = Depends(auth_dependencies.get_blacklist_status)
+# ) -> token_schema.TokenData:
+# # TODO: move the creation of cookie in the route
+
+#     rate_limit = await redis_dependencies.sliding_window_rate_limit(request, response, rate_limiter, blacklist)
+#     if rate_limit.get("login_token"):
+#         return rate_limit
+    
+#     result = await db.execute(
+#         select(db_models.SchoolAccountsVerified)
+#         .where(db_models.SchoolAccountsVerified.email == login_data.email)
+#     )
+#     account = result.scalar_one_or_none()
+#     if account is None:
+#         result = await db.execute(
+#         select(db_models.FocalAccountsVerified)
+#         .where(db_models.FocalAccountsVerified.email == login_data.email)
+#         )
+#         account = result.scalar_one_or_none()
+#     if account is None:
+#         result = await db.execute(
+#         select(db_models.AdminAccount)
+#         .where(db_models.AdminAccount.email == login_data.email)
+#         )
+#         account = result.scalar_one_or_none()
+#     if account is None or not auth_security.verify_password(login_data.password, account.password):
+#         raise HTTPException(
+#             status_code=status.HTTP_401_UNAUTHORIZED,
+#             detail="Incorrect email or password",
+#             headers={"WWW-Authenticate": "Bearer"},
+#         )
+    
+#     client_ip = request.state.real_ip
+#     key = f"rate_limit:login:{client_ip}"
+#     try: 
+#         await (await get_redis_client()).delete(key)
+#     except ValueError:
+#         raise HTTPException(
+#             status_code=status.HTTP_404_NOT_FOUND,
+#             detail="Key not in cache memory",
+#         )
+#     generate_tokens = await auth_dependencies.create_tokens(db, request, response, account.user_id)
+#     return generate_tokens
+
+
 @router.post("/login", status_code=status.HTTP_200_OK)
 async def login (
     request: Request,
     response: Response,
     login_data: token_schema.Login,
     db: AsyncSession = Depends(get_db),
-    rate_limit: dict = Depends(redis_dependencies.sliding_window_rate_limit)
-) -> token_schema.TokenData:
+    rate_limiter: redis_dependencies.SlidingWindowRateLimiter = Depends(redis_dependencies.get_rate_limiter),
+    blacklist: redis_dependencies.BlacklistedUsers = Depends(redis_dependencies.get_blacklist_status)
+) -> token_schema.TokenData | dict:
 
+    """Rate limiting logic"""
+    client_ip = request.state.real_ip
+    login_access_token = request.cookies.get("login_access_token")
+    if not login_access_token:
+        login_access_token = await auth_dependencies.create_login_token(response, client_ip)
+
+    rate_limit = await rate_limiter.check_rate_limit(client_ip, login_access_token)
+    if rate_limit["status"] == "blacklisted":
+        login_restrict_token = await auth_dependencies.create_login_restrict_token(response, client_ip, rate_limit["retry_after"])
+        response.delete_cookie("login_access_token", path="/")
+        await blacklist.add_blacklist(login_restrict_token, client_ip, rate_limit["retry_after"])
+        return await redis_dependencies.get_rate_info(rate_limit)
+
+    """User info query logic"""
     result = await db.execute(
         select(db_models.SchoolAccountsVerified)
         .where(db_models.SchoolAccountsVerified.email == login_data.email)
@@ -137,21 +204,22 @@ async def login (
         )
         account = result.scalar_one_or_none()
     if account is None or not auth_security.verify_password(login_data.password, account.password):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    
-    client_ip = request.state.real_ip
-    key = f"rate_limit:login:{client_ip}"
+        response.status_code = status.HTTP_401_UNAUTHORIZED
+        return{"detail": "Incorrect email or password"}
+            
+    """Whitelist after successfull login"""
+    identifier = f"{client_ip}:{login_access_token}"
+    key = f"rate_limit:login:{identifier}"
     try: 
         await (await get_redis_client()).delete(key)
+        response.delete_cookie("login_access_token", path="/")
     except ValueError:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Key not in cache memory",
         )
+    
+    """Generate access/refresh tokens"""
     generate_tokens = await auth_dependencies.create_tokens(db, request, response, account.user_id)
     return generate_tokens
 
@@ -186,6 +254,7 @@ async def logout(
     await db.commit()
 
     response.delete_cookie("access_token", path="/")
-    response.delete_cookie("refresh_token", path="/auth/refresh")
+    response.delete_cookie("login_access_token", path="/")
+    response.delete_cookie("refresh_token", path="/auth")
 
     return {"message": "Successfully logged out"}

@@ -27,6 +27,7 @@ from route import school_routes, focal_routes, admin_routes
 from auth import auth_route, auth_security
 from database.database import engine, Base, get_db
 from database.redis import get_redis_client
+from config.config import settings
 
 class RealIPAccessFormatter(AccessFormatter):
     def formatMessage(self, record):
@@ -84,6 +85,10 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        settings.FRONTEND_URL,
+        settings.ADMIN_FRONTEND_URL,
+        "https://focal-trainer-recognized-brussels.trycloudflare.com",
+        "http://localhost:3000",
         "http://localhost:3001",
         "http://localhost:3000",       
         ],

@@ -20,7 +20,7 @@ async def login (
     response: Response,
     login_data: token_schema.Login,
     db: AsyncSession = Depends(get_db),
-    rate_limit: dict = Depends(redis_dependencies.sliding_window_rate_limit)
+    #rate_limit: dict = Depends(redis_dependencies.sliding_window_rate_limit)
 ) -> token_schema.TokenData:
     
     result = await db.execute(
