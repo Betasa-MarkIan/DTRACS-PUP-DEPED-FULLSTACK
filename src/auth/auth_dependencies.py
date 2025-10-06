@@ -160,7 +160,7 @@ async def create_login_restrict_token(response: Response,  identifier: str, expi
         max_age=expire,
         secure=False,              # MUST be true on https
         samesite="Lax",          # required for cross-site cookies
-        path="/",
+        path="/auth",
     )
     return token_schema.LoginTokenData(
         login_token=login_restrict_token,

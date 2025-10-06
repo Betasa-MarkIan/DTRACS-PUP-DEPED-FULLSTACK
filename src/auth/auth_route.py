@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Request, Response, Depends, HTTPException, status, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from exceptions import ExceptionDict
@@ -119,8 +120,8 @@ async def login (
 
     rate_limit = await rate_limiter.check_rate_limit(client_ip, login_access_token)
     if rate_limit["status"] == "blacklisted":
-        login_restrict_token = await auth_dependencies.create_login_restrict_token(response, client_ip, rate_limit["retry_after"])
         response.delete_cookie("login_access_token", path="/")
+        login_restrict_token = await auth_dependencies.create_login_restrict_token(response, client_ip, rate_limit["retry_after"])
         await blacklist.add_blacklist(login_restrict_token, client_ip, rate_limit["retry_after"])
         return await redis_dependencies.get_rate_info(rate_limit)
 
@@ -143,8 +144,12 @@ async def login (
         )
         account = result.scalar_one_or_none()
     if account is None or not auth_security.verify_password(login_data.password, account.password):
-        response.status_code = status.HTTP_401_UNAUTHORIZED
-        return{"detail": "Incorrect email or password"}
+        return JSONResponse(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            content={
+                "detail": "Incorrect email or password"
+            }
+        )
             
     """Whitelist after successfull login"""
     identifier = f"{client_ip}:{login_access_token}"

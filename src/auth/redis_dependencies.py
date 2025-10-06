@@ -1,6 +1,6 @@
-from fastapi import Depends
+from fastapi import Depends, HTTPException, status
+from fastapi.responses import JSONResponse
 import redis.asyncio as redis
-from fastapi import HTTPException, status
 from database.redis import get_redis_client
 import time
 import math
@@ -93,9 +93,9 @@ async def get_rate_info(rate_limit_info: dict):
             right = f"0{right}"
         retry_after = f"{left}:{right}"
 
-    raise HTTPException(
-        status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-        detail={
+    return JSONResponse(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        content={
             "error": "Login rate limit exceeded",
             "message": f"Too many login attempts. Try again in {retry_after} minute/s",
             "sliding_window": True,
